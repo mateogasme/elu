@@ -64,9 +64,7 @@ const code = `<!-- inherits from any ancestor with data-theme="dark" -->
       return null;
     }
   })();
-  const prefersDark =
-    window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const initial: 'light' | 'dark' = stored ?? (prefersDark ? 'dark' : 'light');
+  const initial: 'light' | 'dark' = stored ?? 'light';
   setTheme(initial, false);
   requestAnimationFrame(() => {
     themeSelect?.__eluInstance?.setValue(initial, { silent: true });

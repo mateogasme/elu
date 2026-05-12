@@ -4,6 +4,8 @@ Composable Select component for Astro. Single, multi, searchable and grouped, in
 
 Built on the native Popover API and CSS Anchor Positioning. Animation defaults follow Emil Kowalski's published principles (Sonner / Vaul lineage).
 
+**Demo:** https://elu-astro.vercel.app
+
 ## Install
 
 ```bash
