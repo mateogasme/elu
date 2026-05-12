@@ -2,6 +2,7 @@
 import { Code } from 'astro:components';
 import { Elu } from '@mgasme/elu';
 import CodeBlock from './CodeBlock.astro';
+import InlineCode from './InlineCode.astro';
 
 const themes = { light: 'github-light', dark: 'github-dark' } as const;
 const snippets = {
@@ -13,7 +14,7 @@ const snippets = {
 
 <section id="sizes">
   <h2 class="text-base font-medium text-[var(--page-fg)] mb-2 tracking-[-0.01em]">Sizes</h2>
-  <p class="text-base leading-[1.55] text-[var(--page-fg)] mb-4">Three calibrated sizes via the <code class="font-[var(--font-mono)] text-[13px] px-[5px] py-0.5 rounded-[5px] bg-[var(--page-card-2)] shadow-[0_0_0_1px_var(--page-border)]">size</code> prop.</p>
+  <p class="text-base leading-[1.55] text-[var(--page-fg)] mb-4">Three calibrated sizes via the <InlineCode>size</InlineCode> prop.</p>
   <div class="flex flex-wrap gap-2 mb-4 -mx-4 px-4 py-1 relative" data-size-buttons>
     <button class="px-3 py-2 bg-[var(--page-card)] text-[var(--page-fg)] whitespace-nowrap rounded-[6px] text-[13px] font-medium font-[inherit] cursor-pointer border-0 shadow-[0_0_0_1px_var(--page-border)] transition-[background-color,box-shadow] duration-[180ms] [transition-timing-function:cubic-bezier(0.23,1,0.32,1)] hover:bg-[var(--page-hover)] hover:shadow-[0_0_0_1px_var(--page-border-strong)] data-[active=true]:bg-[var(--page-active)] data-[active=true]:shadow-[0_0_0_1px_var(--page-border-strong)] focus-visible:outline-2 focus-visible:outline-[hsl(212_100%_47%)] focus-visible:outline-offset-2" type="button" data-size="sm">Small</button>
     <button class="px-3 py-2 bg-[var(--page-card)] text-[var(--page-fg)] whitespace-nowrap rounded-[6px] text-[13px] font-medium font-[inherit] cursor-pointer border-0 shadow-[0_0_0_1px_var(--page-border)] transition-[background-color,box-shadow] duration-[180ms] [transition-timing-function:cubic-bezier(0.23,1,0.32,1)] hover:bg-[var(--page-hover)] hover:shadow-[0_0_0_1px_var(--page-border-strong)] data-[active=true]:bg-[var(--page-active)] data-[active=true]:shadow-[0_0_0_1px_var(--page-border-strong)] focus-visible:outline-2 focus-visible:outline-[hsl(212_100%_47%)] focus-visible:outline-offset-2" type="button" data-size="md" data-active="true">Medium</button>

@@ -65,8 +65,17 @@ const hasSlot = Astro.slots.has('default');
     transform: scale(0.97);
   }
 
+  /* Touch / no-hover devices: keep the button always visible since there is */
+  /* no hover affordance to reveal it.                                       */
+  @media (hover: none), (pointer: coarse) {
+    .cb-copy {
+      opacity: 1;
+    }
+  }
+
   @media (hover: hover) and (pointer: fine) {
-    .cb-wrapper:hover .cb-copy {
+    .cb-wrapper:hover .cb-copy,
+    .cb-wrapper:focus-within .cb-copy {
       opacity: 1;
     }
 

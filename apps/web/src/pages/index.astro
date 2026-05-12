@@ -13,21 +13,26 @@ import SectionCustomization from '../components/SectionCustomization.astro';
 <Layout>
   <main class="mx-auto max-w-[642px] w-full [padding-left:max(16px,env(safe-area-inset-left))] [padding-right:max(16px,env(safe-area-inset-right))]">
     <header class="text-center max-w-[384px] mx-auto pt-24">
-      <h1 class="text-[128px] font-semibold tracking-[-0.025em] m-0 leading-[132px]">Elu</h1>
+      <h1
+        class="font-semibold tracking-[-0.025em] m-0 leading-[1.03] [font-size:clamp(72px,18vw,128px)]"
+      >
+        Elu
+      </h1>
       <p class="mt-1 text-base leading-[1.4] text-[var(--page-muted)]">
         A composable Astro select.<br /> Single, multi, searchable, grouped.
       </p>
 
-      <div class="flex justify-center gap-2 mt-6">
+      <div class="flex flex-wrap justify-center gap-2 mt-6">
         <a
-          class="inline-flex items-center gap-1.5 px-4 h-9 rounded-lg text-sm font-medium no-underline bg-[var(--page-fg)] text-[var(--page-bg)] [transition:transform_160ms_cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-[hsl(212_100%_47%)] focus-visible:outline-offset-2 motion-reduce:transition-none"
+          class="inline-flex items-center gap-1.5 px-4 h-9 rounded-lg text-sm font-medium no-underline bg-[var(--page-fg)] text-[var(--page-bg)] hover:opacity-90 [transition:transform_160ms_cubic-bezier(0.23,1,0.32,1),opacity_160ms_cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-[hsl(212_100%_47%)] focus-visible:outline-offset-2 motion-reduce:transition-none"
           href="#installation"
         >Get started</a>
         <a
-          class="inline-flex items-center gap-1.5 px-4 h-9 rounded-lg text-sm font-medium no-underline bg-transparent text-[var(--page-fg)] shadow-[0_0_0_1px_var(--page-border)] hover:shadow-[0_0_0_1px_var(--page-border-strong)] [transition:transform_160ms_cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-[hsl(212_100%_47%)] focus-visible:outline-offset-2 motion-reduce:transition-none"
+          class="inline-flex items-center gap-1.5 px-4 h-9 rounded-lg text-sm font-medium no-underline bg-transparent text-[var(--page-fg)] shadow-[0_0_0_1px_var(--page-border)] hover:shadow-[0_0_0_1px_var(--page-border-strong)] [transition:transform_160ms_cubic-bezier(0.23,1,0.32,1),box-shadow_160ms_cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-[hsl(212_100%_47%)] focus-visible:outline-offset-2 motion-reduce:transition-none"
           href="https://github.com/mateogasme/elu"
           target="_blank"
           rel="noopener noreferrer"
+          aria-label="View Elu on GitHub"
         >
           GitHub
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -37,7 +42,7 @@ import SectionCustomization from '../components/SectionCustomization.astro';
       </div>
     </header>
 
-    <div class="flex flex-col gap-12 mt-24 pb-24">
+    <div class="flex flex-col gap-12 mt-24 pb-24 [&_section]:scroll-mt-8">
       <SectionInstallation />
       <SectionUsage />
       <SectionMulti />

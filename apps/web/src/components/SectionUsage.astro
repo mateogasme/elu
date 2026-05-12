@@ -1,6 +1,7 @@
 ---
 import { Elu } from '@mgasme/elu';
 import CodeBlock from './CodeBlock.astro';
+import InlineCode from './InlineCode.astro';
 
 const code = `---
 import { Elu } from '@mgasme/elu';
@@ -29,7 +30,7 @@ import '@mgasme/elu/styles.css';
 <section id="usage">
   <h2 class="text-base font-medium text-[var(--page-fg)] mb-2 tracking-[-0.01em]">Usage</h2>
   <p class="text-base leading-[1.55] text-[var(--page-fg)] mb-4">
-    Render the compound parts inside <code class="font-[var(--font-mono)] text-[13px] px-[5px] py-0.5 rounded-[5px] bg-[var(--page-card-2)] shadow-[0_0_0_1px_var(--page-border)]">Elu.Root</code>. The
+    Render the compound parts inside <InlineCode>Elu.Root</InlineCode>. The
     component ships with sensible defaults: animation, keyboard
     navigation and ARIA wiring are handled for you.
   </p>

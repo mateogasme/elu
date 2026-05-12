@@ -63,9 +63,7 @@
   appearance: none;
   border: 0;
   text-align: left;
-  transition:
-    box-shadow 120ms var(--elu-easing),
-    transform 120ms var(--elu-easing);
+  transition: box-shadow 120ms var(--elu-easing);
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -139,6 +137,8 @@
   [data-elu-content] {
     position-area: bottom span-right;
     margin-top: 4px;
+    /* Flip side when the natural placement collides with the viewport. */
+    position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
   }
   [data-elu-content][data-side="top"] {
     position-area: top span-right;
@@ -231,14 +231,17 @@
   white-space: nowrap;
 }
 
+/* Reserve space for the indicator so layout does not shift when selection */
+/* state changes. Toggle visibility, not display.                          */
 [data-elu-item-indicator] {
-  display: none;
+  display: inline-flex;
   flex-shrink: 0;
+  visibility: hidden;
   color: var(--elu-text);
 }
 
 [data-elu-item][aria-selected="true"] [data-elu-item-indicator] {
-  display: inline-flex;
+  visibility: visible;
 }
 
 /* ── Group + GroupLabel + Separator ─────────────────────────────────────── */
@@ -281,6 +284,12 @@
 
 [data-elu-search] input::placeholder {
   color: var(--elu-text-muted);
+}
+
+[data-elu-search] input::-webkit-search-cancel-button,
+[data-elu-search] input::-webkit-search-decoration {
+  appearance: none;
+  display: none;
 }
 
 /* ── Empty (declarative show/hide via :has()) ───────────────────────────── */

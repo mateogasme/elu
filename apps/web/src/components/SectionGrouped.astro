@@ -1,6 +1,7 @@
 ---
 import { Elu } from '@mgasme/elu';
 import CodeBlock from './CodeBlock.astro';
+import InlineCode from './InlineCode.astro';
 
 const code = `<Elu.Root name="fruit">
   <Elu.Trigger><Elu.Value placeholder="Pick a fruit" /></Elu.Trigger>
@@ -22,7 +23,7 @@ const code = `<Elu.Root name="fruit">
 
 <section id="grouped">
   <h2 class="text-base font-medium text-[var(--page-fg)] mb-2 tracking-[-0.01em]">Grouped</h2>
-  <p class="text-base leading-[1.55] text-[var(--page-fg)] mb-4">Group items with <code class="font-[var(--font-mono)] text-[13px] px-[5px] py-0.5 rounded-[5px] bg-[var(--page-card-2)] shadow-[0_0_0_1px_var(--page-border)]">Elu.Group</code> and a sticky <code class="font-[var(--font-mono)] text-[13px] px-[5px] py-0.5 rounded-[5px] bg-[var(--page-card-2)] shadow-[0_0_0_1px_var(--page-border)]">Elu.GroupLabel</code>.</p>
+  <p class="text-base leading-[1.55] text-[var(--page-fg)] mb-4">Group items with <InlineCode>Elu.Group</InlineCode> and a sticky <InlineCode>Elu.GroupLabel</InlineCode>.</p>
   <div class="flex items-start py-6 px-4 rounded-[6px] bg-[var(--page-card-2)] shadow-[0_0_0_1px_var(--page-border)]">
     <Elu.Root defaultValue="orange">
       <Elu.Trigger><Elu.Value placeholder="Pick a fruit" /></Elu.Trigger>

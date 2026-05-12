@@ -1,5 +1,6 @@
 ---
 import CodeBlock from './CodeBlock.astro';
+import InlineCode from './InlineCode.astro';
 
 const code = `/* Scope overrides to a single Root, or apply globally. */
 [data-elu-root] {
@@ -18,8 +19,8 @@ const code = `/* Scope overrides to a single Root, or apply globally. */
 <section id="customization">
   <h2 class="text-base font-medium text-[var(--page-fg)] mb-2 tracking-[-0.01em]">Customization</h2>
   <p class="text-base leading-[1.55] text-[var(--page-fg)] mb-4">
-    Every surface is themable through <code class="font-[var(--font-mono)] text-[13px] px-[5px] py-0.5 rounded-[5px] bg-[var(--page-card-2)] shadow-[0_0_0_1px_var(--page-border)]">--elu-*</code> CSS variables
-    scoped to <code class="font-[var(--font-mono)] text-[13px] px-[5px] py-0.5 rounded-[5px] bg-[var(--page-card-2)] shadow-[0_0_0_1px_var(--page-border)]">[data-elu-root]</code>. Override on the Root, on an
+    Every surface is themable through <InlineCode>--elu-*</InlineCode> CSS variables
+    scoped to <InlineCode>[data-elu-root]</InlineCode>. Override on the Root, on an
     ancestor, or globally.
   </p>
   <CodeBlock code={code} lang="css" />

@@ -84,7 +84,6 @@ export class EluController {
     });
     if (this.searchInput) {
       this.searchInput.removeEventListener('input', this.onSearchInput);
-      this.searchInput.removeEventListener('keydown', this.onSearchKeydown);
     }
     const form = this.trigger.closest('form');
     if (form) form.removeEventListener('reset', this.onFormReset);
@@ -141,6 +140,12 @@ export class EluController {
     if (!this.searchInput) this.trigger.setAttribute('role', 'combobox');
     if (this.required) this.trigger.setAttribute('aria-required', 'true');
     if (this.disabled) this.trigger.setAttribute('aria-disabled', 'true');
+    // `popovertarget` makes the browser treat trigger click as a native toggle,
+    // which avoids the light-dismiss + click race that would otherwise reopen
+    // the popover on click while open. Skip when disabled so it stays inert.
+    if (!this.disabled) {
+      this.trigger.setAttribute('popovertarget', this.content.id);
+    }
 
     this.content.setAttribute('role', 'listbox');
     if (this.multiple) this.content.setAttribute('aria-multiselectable', 'true');
@@ -194,7 +199,6 @@ export class EluController {
     });
     if (this.searchInput) {
       this.searchInput.addEventListener('input', this.onSearchInput);
-      this.searchInput.addEventListener('keydown', this.onSearchKeydown);
     }
     const form = this.trigger.closest('form');
     if (form) form.addEventListener('reset', this.onFormReset);
@@ -206,40 +210,51 @@ export class EluController {
 
   // ── events ───────────────────────────────────────────────────────────────
 
+  private pendingOpenAction: 'first' | 'last' | null = null;
+  private pendingTypeaheadKey: string | null = null;
+
   private onTriggerClick = (e: MouseEvent) => {
-    e.preventDefault();
-    if (this.disabled) return;
-    this.toggle();
+    // popovertarget handles toggle natively. Block clicks when disabled so the
+    // browser does not toggle the inert popover.
+    if (this.disabled) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+    }
   };
 
   private onTriggerKeydown = (e: KeyboardEvent) => {
     if (this.disabled) return;
-    if (this.isOpen && !this.searchInput) {
-      this.handleDispatch(dispatchOpen(e, false, this.multiple), e);
-    } else if (!this.isOpen) {
-      const d = dispatchClosed(e);
-      if (d.action !== 'noop') {
-        e.preventDefault();
-        this.open();
-        if (e.key === 'Home' || e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') {
-          this.highlightFirstEnabled();
-        } else if (e.key === 'End' || e.key === 'ArrowUp') {
-          this.highlightLastEnabled();
-        } else if (d.key) {
-          this.typeahead(d.key);
-        }
+    if (this.isOpen) {
+      // Search owns key handling when present (it has focus).
+      if (!this.searchInput) {
+        this.handleDispatch(dispatchOpen(e, false, this.multiple), e);
       }
+      return;
     }
+    const d = dispatchClosed(e);
+    if (d.action === 'noop') return;
+    // Enter / Space: let the native button click + popovertarget open the
+    // popover. ArrowDown/Up/Home/End/printable: open manually and stash the
+    // follow-up action so onToggle can apply it after the popover is open.
+    if (e.key === 'Enter' || e.key === ' ') {
+      this.pendingOpenAction = 'first';
+      return;
+    }
+    e.preventDefault();
+    if (e.key === 'ArrowDown' || e.key === 'Home') {
+      this.pendingOpenAction = 'first';
+    } else if (e.key === 'ArrowUp' || e.key === 'End') {
+      this.pendingOpenAction = 'last';
+    } else if (d.key) {
+      this.pendingTypeaheadKey = d.key;
+    }
+    this.open();
   };
 
   private onContentKeydown = (e: KeyboardEvent) => {
     if (!this.isOpen) return;
     const searchFocused = !!this.searchInput && document.activeElement === this.searchInput;
     this.handleDispatch(dispatchOpen(e, searchFocused, this.multiple), e);
-  };
-
-  private onSearchKeydown = (e: KeyboardEvent) => {
-    this.handleDispatch(dispatchOpen(e, true, this.multiple), e);
   };
 
   private handleDispatch(d: KeyDispatch, e: KeyboardEvent): void {
@@ -336,6 +351,11 @@ export class EluController {
       if (this.searchInput) this.searchInput.setAttribute('aria-expanded', 'true');
       if (this.useAnchorFallback) this.repositionFallback();
       if (this.searchInput) this.searchInput.focus();
+      if (this.pendingOpenAction === 'first') this.highlightFirstEnabled();
+      else if (this.pendingOpenAction === 'last') this.highlightLastEnabled();
+      if (this.pendingTypeaheadKey) this.typeahead(this.pendingTypeaheadKey);
+      this.pendingOpenAction = null;
+      this.pendingTypeaheadKey = null;
     } else {
       this.isOpen = false;
       this.root.dataset.state = 'closed';
@@ -353,15 +373,14 @@ export class EluController {
   private onFormReset = () => {
     this.selected.clear();
     this.defaultSelected.forEach((v) => this.selected.add(v));
+    if (this.searchInput) {
+      this.searchInput.value = '';
+      this.items.forEach((it) => (it.hidden = false));
+    }
     this.afterSelectionChange();
   };
 
   // ── popover control ──────────────────────────────────────────────────────
-
-  private toggle(): void {
-    if (this.isOpen) this.close();
-    else this.open();
-  }
 
   private open(): void {
     if (this.isOpen || this.disabled) return;
@@ -421,8 +440,13 @@ export class EluController {
     const item = this.items[index];
     item.dataset.highlighted = 'true';
     const id = item.id;
-    this.trigger.setAttribute('aria-activedescendant', id);
-    if (this.searchInput) this.searchInput.setAttribute('aria-activedescendant', id);
+    // Only the focused element should advertise activedescendant.
+    if (this.searchInput) {
+      this.searchInput.setAttribute('aria-activedescendant', id);
+      this.trigger.removeAttribute('aria-activedescendant');
+    } else {
+      this.trigger.setAttribute('aria-activedescendant', id);
+    }
     item.scrollIntoView({ block: 'nearest' });
   }
 
@@ -514,7 +538,8 @@ export class EluController {
   }
 
   private rebuildFormInputs(): void {
-    if (!this.name) {
+    // Native <select disabled> is excluded from form submission; mirror that.
+    if (!this.name || this.disabled) {
       this.formInputsHost.replaceChildren();
       return;
     }
