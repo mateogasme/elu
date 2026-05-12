@@ -1,0 +1,11 @@
+---
+import type { EluGroupProps } from '../src/types';
+
+export interface Props extends EluGroupProps {}
+
+const { class: className } = Astro.props;
+---
+
+<div data-elu-group role="group" class={className}>
+  <slot />
+</div>

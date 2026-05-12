@@ -1,0 +1,71 @@
+---
+import type { EluRootProps } from '../src/types';
+
+export interface Props extends EluRootProps {}
+
+const {
+  id,
+  name,
+  value,
+  defaultValue,
+  multiple = false,
+  disabled = false,
+  required = false,
+  dir = 'ltr',
+  size,
+  theme,
+  class: className,
+} = Astro.props;
+
+const resolved = value !== undefined ? value : defaultValue;
+const initialArray: string[] = Array.isArray(resolved)
+  ? resolved.map(String)
+  : resolved != null && resolved !== ''
+  ? [String(resolved)]
+  : [];
+const initialJson = JSON.stringify(initialArray);
+---
+
+<div
+  data-elu-root
+  data-state="closed"
+  dir={dir}
+  id={id}
+  class={className}
+  data-multiple={multiple ? 'true' : undefined}
+  data-disabled={disabled ? 'true' : undefined}
+  data-required={required ? 'true' : undefined}
+  data-size={size}
+  data-theme={theme}
+  data-name={name}
+  data-value-initial={initialJson}
+>
+  <slot />
+  <span data-elu-form-inputs hidden>
+    {name &&
+      initialArray.map((v) => (
+        <input type="hidden" name={name} value={v} required={required} />
+      ))}
+    {name && initialArray.length === 0 && required && (
+      <input type="hidden" name={name} value="" required />
+    )}
+  </span>
+</div>
+
+<script>
+  import { bootElu } from '../src/controller';
+
+  bootElu();
+
+  document.addEventListener('astro:page-load', () => bootElu());
+
+  document.addEventListener('astro:before-swap', () => {
+    document
+      .querySelectorAll<HTMLElement>('[data-elu-root][data-elu-booted]')
+      .forEach((root) => {
+        const inst = (root as unknown as { __eluInstance?: { destroy: () => void } })
+          .__eluInstance;
+        inst?.destroy?.();
+      });
+  });
+</script>

@@ -1,0 +1,11 @@
+---
+import type { EluValueProps } from '../src/types';
+
+export interface Props extends EluValueProps {}
+
+const { placeholder = '', class: className } = Astro.props;
+---
+
+<span data-elu-value data-placeholder={placeholder} data-empty="true" class={className}>
+  {placeholder}
+</span>

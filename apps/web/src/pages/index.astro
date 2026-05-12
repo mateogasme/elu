@@ -1,0 +1,59 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SectionInstallation from '../components/SectionInstallation.astro';
+import SectionUsage from '../components/SectionUsage.astro';
+import SectionMulti from '../components/SectionMulti.astro';
+import SectionSearchable from '../components/SectionSearchable.astro';
+import SectionGrouped from '../components/SectionGrouped.astro';
+import SectionSizes from '../components/SectionSizes.astro';
+import SectionTheme from '../components/SectionTheme.astro';
+import SectionCustomization from '../components/SectionCustomization.astro';
+---
+
+<Layout>
+  <main class="mx-auto max-w-[642px] w-full [padding-left:max(16px,env(safe-area-inset-left))] [padding-right:max(16px,env(safe-area-inset-right))]">
+    <header class="text-center max-w-[384px] mx-auto pt-24">
+      <h1 class="text-[128px] font-semibold tracking-[-0.025em] m-0 leading-[132px]">Elu</h1>
+      <p class="mt-1 text-base leading-[1.4] text-[var(--page-muted)]">
+        A composable Astro select.<br /> Single, multi, searchable, grouped.
+      </p>
+
+      <div class="flex justify-center gap-2 mt-6">
+        <a
+          class="inline-flex items-center gap-1.5 px-4 h-9 rounded-lg text-sm font-medium no-underline bg-[var(--page-fg)] text-[var(--page-bg)] [transition:transform_160ms_cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-[hsl(212_100%_47%)] focus-visible:outline-offset-2 motion-reduce:transition-none"
+          href="#installation"
+        >Get started</a>
+        <a
+          class="inline-flex items-center gap-1.5 px-4 h-9 rounded-lg text-sm font-medium no-underline bg-transparent text-[var(--page-fg)] shadow-[0_0_0_1px_var(--page-border)] hover:shadow-[0_0_0_1px_var(--page-border-strong)] [transition:transform_160ms_cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-[hsl(212_100%_47%)] focus-visible:outline-offset-2 motion-reduce:transition-none"
+          href="https://github.com/mateogasme/elu"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          GitHub
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M7 17L17 7M7 7h10v10" />
+          </svg>
+        </a>
+      </div>
+    </header>
+
+    <div class="flex flex-col gap-12 mt-24 pb-24">
+      <SectionInstallation />
+      <SectionUsage />
+      <SectionMulti />
+      <SectionSearchable />
+      <SectionGrouped />
+      <SectionSizes />
+      <SectionTheme />
+      <SectionCustomization />
+    </div>
+  </main>
+</Layout>
+
+<script>
+  document.addEventListener('elu:change', (e) => {
+    const detail = (e as CustomEvent).detail;
+    console.log('[demo] elu:change', detail);
+  });
+
+</script>

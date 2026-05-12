@@ -1,0 +1,51 @@
+---
+import { Elu } from '@mgasme/elu';
+import CodeBlock from './CodeBlock.astro';
+
+const code = `---
+import { Elu } from '@mgasme/elu';
+import '@mgasme/elu/styles.css';
+---
+
+<Elu.Root name="fruit" defaultValue="orange">
+  <Elu.Trigger>
+    <Elu.Value placeholder="Pick a fruit" />
+  </Elu.Trigger>
+  <Elu.Content>
+    <Elu.Viewport>
+      <Elu.Item value="orange">
+        <Elu.ItemText>Orange</Elu.ItemText>
+        <Elu.ItemIndicator />
+      </Elu.Item>
+      <Elu.Item value="lemon">
+        <Elu.ItemText>Lemon</Elu.ItemText>
+        <Elu.ItemIndicator />
+      </Elu.Item>
+    </Elu.Viewport>
+  </Elu.Content>
+</Elu.Root>`;
+---
+
+<section id="usage">
+  <h2 class="text-base font-medium text-[var(--page-fg)] mb-2 tracking-[-0.01em]">Usage</h2>
+  <p class="text-base leading-[1.55] text-[var(--page-fg)] mb-4">
+    Render the compound parts inside <code class="font-[var(--font-mono)] text-[13px] px-[5px] py-0.5 rounded-[5px] bg-[var(--page-card-2)] shadow-[0_0_0_1px_var(--page-border)]">Elu.Root</code>. The
+    component ships with sensible defaults: animation, keyboard
+    navigation and ARIA wiring are handled for you.
+  </p>
+  <div class="flex items-start py-6 px-4 rounded-[6px] bg-[var(--page-card-2)] shadow-[0_0_0_1px_var(--page-border)]">
+    <Elu.Root name="fruit" defaultValue="orange">
+      <Elu.Trigger>
+        <Elu.Value placeholder="Pick a fruit" />
+      </Elu.Trigger>
+      <Elu.Content>
+        <Elu.Viewport>
+          <Elu.Item value="orange"><Elu.ItemText>Orange</Elu.ItemText><Elu.ItemIndicator /></Elu.Item>
+          <Elu.Item value="lemon"><Elu.ItemText>Lemon</Elu.ItemText><Elu.ItemIndicator /></Elu.Item>
+          <Elu.Item value="grapefruit"><Elu.ItemText>Grapefruit</Elu.ItemText><Elu.ItemIndicator /></Elu.Item>
+        </Elu.Viewport>
+      </Elu.Content>
+    </Elu.Root>
+  </div>
+  <CodeBlock code={code} lang="astro" />
+</section>

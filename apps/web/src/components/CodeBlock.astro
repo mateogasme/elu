@@ -1,0 +1,184 @@
+---
+import { Code } from 'astro:components';
+
+interface Props {
+  code?: string;
+  lang?: string;
+  copyFromActive?: string;
+}
+
+const { code, lang, copyFromActive } = Astro.props;
+const themes = { light: 'github-light', dark: 'github-dark' } as const;
+const hasSlot = Astro.slots.has('default');
+---
+
+<div class="cb-wrapper group relative mt-4 rounded-[6px] shadow-[0_0_0_1px_var(--page-border)] overflow-hidden bg-[var(--page-card)]">
+  <button
+    class="cb-copy"
+    type="button"
+    aria-label="Copy code"
+    data-codeblock-copy
+    data-copy={!copyFromActive ? code : undefined}
+    data-copy-from-active={copyFromActive}
+  >
+    <span class="cb-icon-wrap">
+      <svg data-icon="copy" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+        <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+      </svg>
+      <svg data-icon="check" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+    </span>
+  </button>
+  {hasSlot ? <slot /> : code && lang && <Code {code} lang={lang as any} {themes} />}
+</div>
+
+<style>
+  .cb-copy {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 1;
+    width: 26px;
+    height: 26px;
+    border: 1px solid var(--page-border);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--page-card);
+    cursor: pointer;
+    opacity: 0;
+    color: var(--page-fg);
+    padding: 0;
+    transition: background 200ms, box-shadow 200ms, opacity 200ms, transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .cb-copy:focus-visible {
+    opacity: 1;
+    outline: none;
+    box-shadow: 0 0 0 1px var(--page-border-strong);
+  }
+
+  .cb-copy:active {
+    transform: scale(0.97);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .cb-wrapper:hover .cb-copy {
+      opacity: 1;
+    }
+
+    .cb-copy:hover {
+      background: var(--page-hover);
+    }
+  }
+
+  .cb-icon-wrap {
+    position: relative;
+    width: 13px;
+    height: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cb-icon-wrap svg {
+    position: absolute;
+  }
+
+  .cb-icon-wrap svg[data-icon='check'] {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+</style>
+
+<script>
+  const DURATION = 150;
+  const EASING = 'ease-out';
+
+  function animateOut(el: Element) {
+    return el.animate(
+      [
+        { opacity: 1, transform: 'scale(1)' },
+        { opacity: 0, transform: 'scale(0.5)' },
+      ],
+      { duration: DURATION, easing: EASING, fill: 'forwards' },
+    ).finished;
+  }
+
+  function animateIn(el: Element) {
+    return el.animate(
+      [
+        { opacity: 0, transform: 'scale(0.5)' },
+        { opacity: 1, transform: 'scale(1)' },
+      ],
+      { duration: DURATION, easing: EASING, fill: 'forwards' },
+    ).finished;
+  }
+
+  document.querySelectorAll<HTMLButtonElement>('[data-codeblock-copy]').forEach((btn) => {
+    if (btn.dataset.copyInited) return;
+    btn.dataset.copyInited = 'true';
+
+    const copyIcon = btn.querySelector<SVGElement>('[data-icon="copy"]')!;
+    const checkIcon = btn.querySelector<SVGElement>('[data-icon="check"]')!;
+    let reset: ReturnType<typeof setTimeout> | null = null;
+    let busy = false;
+
+    async function showCheck() {
+      if (busy) return;
+      busy = true;
+      await animateOut(copyIcon);
+      await animateIn(checkIcon);
+      busy = false;
+    }
+
+    async function showCopy() {
+      if (busy) return;
+      busy = true;
+      await animateOut(checkIcon);
+      await animateIn(copyIcon);
+      busy = false;
+    }
+
+    btn.addEventListener('click', async () => {
+      const direct = btn.getAttribute('data-copy');
+      let payload = direct;
+      if (!payload) {
+        const group = btn.getAttribute('data-copy-from-active');
+        if (group) {
+          const active = document.querySelector<HTMLElement>(
+            `[data-code-group="${group}"][data-active="true"] pre`,
+          );
+          payload = active?.textContent ?? '';
+        }
+      }
+      if (!payload) return;
+
+      try {
+        await navigator.clipboard.writeText(payload);
+      } catch {
+        const ta = document.createElement('textarea');
+        ta.value = payload;
+        ta.style.cssText = 'position:fixed;opacity:0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+      }
+
+      if (reset) {
+        clearTimeout(reset);
+        reset = null;
+      }
+
+      await showCheck();
+      reset = setTimeout(() => {
+        showCopy();
+        reset = null;
+      }, 2000);
+    });
+  });
+</script>

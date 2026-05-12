@@ -1,0 +1,72 @@
+---
+import { Code } from 'astro:components';
+import { Elu } from '@mgasme/elu';
+import CodeBlock from './CodeBlock.astro';
+
+const themes = { light: 'github-light', dark: 'github-dark' } as const;
+const snippets = {
+  sm: `<Elu.Root size="sm">…</Elu.Root>`,
+  md: `<Elu.Root>…</Elu.Root>`,
+  lg: `<Elu.Root size="lg">…</Elu.Root>`,
+};
+---
+
+<section id="sizes">
+  <h2 class="text-base font-medium text-[var(--page-fg)] mb-2 tracking-[-0.01em]">Sizes</h2>
+  <p class="text-base leading-[1.55] text-[var(--page-fg)] mb-4">Three calibrated sizes via the <code class="font-[var(--font-mono)] text-[13px] px-[5px] py-0.5 rounded-[5px] bg-[var(--page-card-2)] shadow-[0_0_0_1px_var(--page-border)]">size</code> prop.</p>
+  <div class="flex flex-wrap gap-2 mb-4 -mx-4 px-4 py-1 relative" data-size-buttons>
+    <button class="px-3 py-2 bg-[var(--page-card)] text-[var(--page-fg)] whitespace-nowrap rounded-[6px] text-[13px] font-medium font-[inherit] cursor-pointer border-0 shadow-[0_0_0_1px_var(--page-border)] transition-[background-color,box-shadow] duration-[180ms] [transition-timing-function:cubic-bezier(0.23,1,0.32,1)] hover:bg-[var(--page-hover)] hover:shadow-[0_0_0_1px_var(--page-border-strong)] data-[active=true]:bg-[var(--page-active)] data-[active=true]:shadow-[0_0_0_1px_var(--page-border-strong)] focus-visible:outline-2 focus-visible:outline-[hsl(212_100%_47%)] focus-visible:outline-offset-2" type="button" data-size="sm">Small</button>
+    <button class="px-3 py-2 bg-[var(--page-card)] text-[var(--page-fg)] whitespace-nowrap rounded-[6px] text-[13px] font-medium font-[inherit] cursor-pointer border-0 shadow-[0_0_0_1px_var(--page-border)] transition-[background-color,box-shadow] duration-[180ms] [transition-timing-function:cubic-bezier(0.23,1,0.32,1)] hover:bg-[var(--page-hover)] hover:shadow-[0_0_0_1px_var(--page-border-strong)] data-[active=true]:bg-[var(--page-active)] data-[active=true]:shadow-[0_0_0_1px_var(--page-border-strong)] focus-visible:outline-2 focus-visible:outline-[hsl(212_100%_47%)] focus-visible:outline-offset-2" type="button" data-size="md" data-active="true">Medium</button>
+    <button class="px-3 py-2 bg-[var(--page-card)] text-[var(--page-fg)] whitespace-nowrap rounded-[6px] text-[13px] font-medium font-[inherit] cursor-pointer border-0 shadow-[0_0_0_1px_var(--page-border)] transition-[background-color,box-shadow] duration-[180ms] [transition-timing-function:cubic-bezier(0.23,1,0.32,1)] hover:bg-[var(--page-hover)] hover:shadow-[0_0_0_1px_var(--page-border-strong)] data-[active=true]:bg-[var(--page-active)] data-[active=true]:shadow-[0_0_0_1px_var(--page-border-strong)] focus-visible:outline-2 focus-visible:outline-[hsl(212_100%_47%)] focus-visible:outline-offset-2" type="button" data-size="lg">Large</button>
+  </div>
+  <div class="flex items-start py-6 px-4 rounded-[6px] bg-[var(--page-card-2)] shadow-[0_0_0_1px_var(--page-border)]">
+    <Elu.Root id="size-preview" defaultValue="b">
+      <Elu.Trigger><Elu.Value /></Elu.Trigger>
+      <Elu.Content>
+        <Elu.Viewport>
+          <Elu.Item value="a"><Elu.ItemText>Option A</Elu.ItemText><Elu.ItemIndicator /></Elu.Item>
+          <Elu.Item value="b"><Elu.ItemText>Option B</Elu.ItemText><Elu.ItemIndicator /></Elu.Item>
+          <Elu.Item value="c"><Elu.ItemText>Option C</Elu.ItemText><Elu.ItemIndicator /></Elu.Item>
+        </Elu.Viewport>
+      </Elu.Content>
+    </Elu.Root>
+  </div>
+  <CodeBlock copyFromActive="size-code">
+    <div data-code-pane data-code-id="sm" data-code-group="size-code">
+      <Code code={snippets.sm} lang="astro" {themes} />
+    </div>
+    <div data-code-pane data-code-id="md" data-code-group="size-code" data-active="true">
+      <Code code={snippets.md} lang="astro" {themes} />
+    </div>
+    <div data-code-pane data-code-id="lg" data-code-group="size-code">
+      <Code code={snippets.lg} lang="astro" {themes} />
+    </div>
+  </CodeBlock>
+</section>
+
+<script>
+  const sizeButtons = document.querySelectorAll<HTMLButtonElement>(
+    '[data-size-buttons] [data-size]',
+  );
+  const sizePreview = document.getElementById('size-preview');
+  const sizePanes = document.querySelectorAll<HTMLElement>(
+    '[data-code-group="size-code"]',
+  );
+  sizeButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const size = btn.dataset.size as 'sm' | 'md' | 'lg';
+      sizeButtons.forEach((b) =>
+        b === btn ? (b.dataset.active = 'true') : delete b.dataset.active,
+      );
+      if (sizePreview) {
+        if (size === 'md') delete sizePreview.dataset.size;
+        else sizePreview.dataset.size = size;
+      }
+      sizePanes.forEach((p) =>
+        p.dataset.codeId === size
+          ? (p.dataset.active = 'true')
+          : delete p.dataset.active,
+      );
+    });
+  });
+</script>

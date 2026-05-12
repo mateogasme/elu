@@ -1,0 +1,60 @@
+{
+  "name": "@mgasme/elu",
+  "version": "0.1.0",
+  "description": "Composable Astro select component. Single, multi, searchable, grouped. Zero runtime dependencies.",
+  "keywords": [
+    "astro",
+    "astro-component",
+    "select",
+    "combobox",
+    "listbox",
+    "dropdown",
+    "multi-select",
+    "searchable",
+    "popover",
+    "anchor-positioning",
+    "accessibility",
+    "a11y"
+  ],
+  "homepage": "https://github.com/mateogasme/elu#readme",
+  "bugs": {
+    "url": "https://github.com/mateogasme/elu/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mateogasme/elu.git"
+  },
+  "author": "mateogasme",
+  "type": "module",
+  "license": "MIT",
+  "exports": {
+    ".": "./src/index.ts",
+    "./styles.css": "./src/styles.css",
+    "./components/*": "./components/*"
+  },
+  "files": [
+    "components",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "peerDependencies": {
+    "astro": "^5.0.0 || ^6.0.0"
+  },
+  "scripts": {
+    "check": "astro check",
+    "prepublishOnly": "astro check"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.8",
+    "astro": "^6.1.8",
+    "typescript": "^5.9.3"
+  },
+  "sideEffects": [
+    "./src/styles.css",
+    "./components/*.astro"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

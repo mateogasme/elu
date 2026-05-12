@@ -1,0 +1,48 @@
+---
+import { Elu } from '@mgasme/elu';
+import CodeBlock from './CodeBlock.astro';
+
+const code = `<Elu.Root name="fruit">
+  <Elu.Trigger><Elu.Value placeholder="Pick a fruit" /></Elu.Trigger>
+  <Elu.Content>
+    <Elu.Viewport>
+      <Elu.Group>
+        <Elu.GroupLabel>Citrus</Elu.GroupLabel>
+        <Elu.Item value="orange"><Elu.ItemText>Orange</Elu.ItemText></Elu.Item>
+        <Elu.Item value="lemon"><Elu.ItemText>Lemon</Elu.ItemText></Elu.Item>
+      </Elu.Group>
+      <Elu.Group>
+        <Elu.GroupLabel>Berries</Elu.GroupLabel>
+        <Elu.Item value="strawberry"><Elu.ItemText>Strawberry</Elu.ItemText></Elu.Item>
+      </Elu.Group>
+    </Elu.Viewport>
+  </Elu.Content>
+</Elu.Root>`;
+---
+
+<section id="grouped">
+  <h2 class="text-base font-medium text-[var(--page-fg)] mb-2 tracking-[-0.01em]">Grouped</h2>
+  <p class="text-base leading-[1.55] text-[var(--page-fg)] mb-4">Group items with <code class="font-[var(--font-mono)] text-[13px] px-[5px] py-0.5 rounded-[5px] bg-[var(--page-card-2)] shadow-[0_0_0_1px_var(--page-border)]">Elu.Group</code> and a sticky <code class="font-[var(--font-mono)] text-[13px] px-[5px] py-0.5 rounded-[5px] bg-[var(--page-card-2)] shadow-[0_0_0_1px_var(--page-border)]">Elu.GroupLabel</code>.</p>
+  <div class="flex items-start py-6 px-4 rounded-[6px] bg-[var(--page-card-2)] shadow-[0_0_0_1px_var(--page-border)]">
+    <Elu.Root defaultValue="orange">
+      <Elu.Trigger><Elu.Value placeholder="Pick a fruit" /></Elu.Trigger>
+      <Elu.Content>
+        <Elu.Viewport>
+          <Elu.Group>
+            <Elu.GroupLabel>Citrus</Elu.GroupLabel>
+            <Elu.Item value="orange"><Elu.ItemText>Orange</Elu.ItemText><Elu.ItemIndicator /></Elu.Item>
+            <Elu.Item value="lemon"><Elu.ItemText>Lemon</Elu.ItemText><Elu.ItemIndicator /></Elu.Item>
+            <Elu.Item value="grapefruit"><Elu.ItemText>Grapefruit</Elu.ItemText><Elu.ItemIndicator /></Elu.Item>
+          </Elu.Group>
+          <Elu.Group>
+            <Elu.GroupLabel>Berries</Elu.GroupLabel>
+            <Elu.Item value="strawberry"><Elu.ItemText>Strawberry</Elu.ItemText><Elu.ItemIndicator /></Elu.Item>
+            <Elu.Item value="blueberry"><Elu.ItemText>Blueberry</Elu.ItemText><Elu.ItemIndicator /></Elu.Item>
+            <Elu.Item value="raspberry"><Elu.ItemText>Raspberry</Elu.ItemText><Elu.ItemIndicator /></Elu.Item>
+          </Elu.Group>
+        </Elu.Viewport>
+      </Elu.Content>
+    </Elu.Root>
+  </div>
+  <CodeBlock code={code} lang="astro" />
+</section>

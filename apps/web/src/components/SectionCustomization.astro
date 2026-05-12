@@ -1,0 +1,26 @@
+---
+import CodeBlock from './CodeBlock.astro';
+
+const code = `/* Scope overrides to a single Root, or apply globally. */
+[data-elu-root] {
+  --elu-bg: hsl(0 0% 100%);
+  --elu-border: hsl(0 0% 92%);
+  --elu-text: hsl(0 0% 9%);
+  --elu-radius: 8px;
+  --elu-trigger-height: 36px;
+  --elu-item-height: 32px;
+  --elu-duration-open: 180ms;
+  --elu-duration-close: 140ms;
+  --elu-easing: cubic-bezier(0.23, 1, 0.32, 1);
+}`;
+---
+
+<section id="customization">
+  <h2 class="text-base font-medium text-[var(--page-fg)] mb-2 tracking-[-0.01em]">Customization</h2>
+  <p class="text-base leading-[1.55] text-[var(--page-fg)] mb-4">
+    Every surface is themable through <code class="font-[var(--font-mono)] text-[13px] px-[5px] py-0.5 rounded-[5px] bg-[var(--page-card-2)] shadow-[0_0_0_1px_var(--page-border)]">--elu-*</code> CSS variables
+    scoped to <code class="font-[var(--font-mono)] text-[13px] px-[5px] py-0.5 rounded-[5px] bg-[var(--page-card-2)] shadow-[0_0_0_1px_var(--page-border)]">[data-elu-root]</code>. Override on the Root, on an
+    ancestor, or globally.
+  </p>
+  <CodeBlock code={code} lang="css" />
+</section>

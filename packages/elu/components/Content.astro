@@ -1,0 +1,25 @@
+---
+import type { EluContentProps } from '../src/types';
+
+export interface Props extends EluContentProps {}
+
+const {
+  class: className,
+  align = 'start',
+  side = 'bottom',
+  sideOffset = 4,
+  collisionPadding = 8,
+} = Astro.props;
+---
+
+<div
+  data-elu-content
+  popover="auto"
+  class={className}
+  data-side={side}
+  data-align={align}
+  data-side-offset={sideOffset}
+  data-collision-padding={collisionPadding}
+>
+  <slot />
+</div>

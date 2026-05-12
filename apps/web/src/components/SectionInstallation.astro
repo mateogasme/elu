@@ -1,0 +1,11 @@
+---
+import CodeBlock from './CodeBlock.astro';
+
+const code = `npm install @mgasme/elu`;
+---
+
+<section id="installation">
+  <h2 class="text-base font-medium text-[var(--page-fg)] mb-2 tracking-[-0.01em]">Installation</h2>
+  <p class="text-base leading-[1.55] text-[var(--page-fg)] mb-4">Install the package and import the styles once in your layout.</p>
+  <CodeBlock code={code} lang="bash" />
+</section>

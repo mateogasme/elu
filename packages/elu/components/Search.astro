@@ -1,0 +1,18 @@
+---
+import type { EluSearchProps } from '../src/types';
+
+export interface Props extends EluSearchProps {}
+
+const { placeholder = 'Search…', class: className, debounceMs = 0 } = Astro.props;
+---
+
+<div data-elu-search class={className}>
+  <input
+    type="text"
+    placeholder={placeholder}
+    autocomplete="off"
+    autocorrect="off"
+    spellcheck="false"
+    data-debounce-ms={debounceMs}
+  />
+</div>

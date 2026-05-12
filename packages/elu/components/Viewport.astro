@@ -1,0 +1,12 @@
+---
+import type { EluViewportProps } from '../src/types';
+
+export interface Props extends EluViewportProps {}
+
+const { class: className, maxHeight } = Astro.props;
+const style = maxHeight ? `max-height: ${maxHeight}` : undefined;
+---
+
+<div data-elu-viewport class={className} style={style}>
+  <slot />
+</div>

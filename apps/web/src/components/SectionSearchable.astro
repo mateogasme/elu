@@ -1,0 +1,49 @@
+---
+import { Elu } from '@mgasme/elu';
+import CodeBlock from './CodeBlock.astro';
+
+const code = `<Elu.Root name="country">
+  <Elu.Trigger>
+    <Elu.Value placeholder="Pick a country" />
+  </Elu.Trigger>
+  <Elu.Content>
+    <Elu.Search placeholder="Search countries…" />
+    <Elu.Viewport>
+      <Elu.Item value="ar"><Elu.ItemText>Argentina</Elu.ItemText></Elu.Item>
+      <Elu.Item value="br"><Elu.ItemText>Brazil</Elu.ItemText></Elu.Item>
+      <Elu.Item value="ca"><Elu.ItemText>Canada</Elu.ItemText></Elu.Item>
+    </Elu.Viewport>
+    <Elu.Empty>No countries match.</Elu.Empty>
+  </Elu.Content>
+</Elu.Root>`;
+---
+
+<section id="searchable">
+  <h2 class="text-base font-medium text-[var(--page-fg)] mb-2 tracking-[-0.01em]">Searchable</h2>
+  <p class="text-base leading-[1.55] text-[var(--page-fg)] mb-4">Drop in <code class="font-[var(--font-mono)] text-[13px] px-[5px] py-0.5 rounded-[5px] bg-[var(--page-card-2)] shadow-[0_0_0_1px_var(--page-border)]">Elu.Search</code>. Items filter live as you type; pair with <code class="font-[var(--font-mono)] text-[13px] px-[5px] py-0.5 rounded-[5px] bg-[var(--page-card-2)] shadow-[0_0_0_1px_var(--page-border)]">Elu.Empty</code> for a fallback message.</p>
+  <div class="flex items-start py-6 px-4 rounded-[6px] bg-[var(--page-card-2)] shadow-[0_0_0_1px_var(--page-border)]">
+    <Elu.Root name="country">
+      <Elu.Trigger><Elu.Value placeholder="Pick a country" /></Elu.Trigger>
+      <Elu.Content>
+        <Elu.Search placeholder="Search countries…" />
+        <Elu.Viewport>
+          <Elu.Item value="ar"><Elu.ItemText>Argentina</Elu.ItemText><Elu.ItemIndicator /></Elu.Item>
+          <Elu.Item value="br"><Elu.ItemText>Brazil</Elu.ItemText><Elu.ItemIndicator /></Elu.Item>
+          <Elu.Item value="ca"><Elu.ItemText>Canada</Elu.ItemText><Elu.ItemIndicator /></Elu.Item>
+          <Elu.Item value="cl"><Elu.ItemText>Chile</Elu.ItemText><Elu.ItemIndicator /></Elu.Item>
+          <Elu.Item value="co"><Elu.ItemText>Colombia</Elu.ItemText><Elu.ItemIndicator /></Elu.Item>
+          <Elu.Item value="de"><Elu.ItemText>Germany</Elu.ItemText><Elu.ItemIndicator /></Elu.Item>
+          <Elu.Item value="es"><Elu.ItemText>Spain</Elu.ItemText><Elu.ItemIndicator /></Elu.Item>
+          <Elu.Item value="fr"><Elu.ItemText>France</Elu.ItemText><Elu.ItemIndicator /></Elu.Item>
+          <Elu.Item value="jp"><Elu.ItemText>Japan</Elu.ItemText><Elu.ItemIndicator /></Elu.Item>
+          <Elu.Item value="mx"><Elu.ItemText>Mexico</Elu.ItemText><Elu.ItemIndicator /></Elu.Item>
+          <Elu.Item value="uk"><Elu.ItemText>United Kingdom</Elu.ItemText><Elu.ItemIndicator /></Elu.Item>
+          <Elu.Item value="us"><Elu.ItemText>United States</Elu.ItemText><Elu.ItemIndicator /></Elu.Item>
+          <Elu.Item value="uy"><Elu.ItemText>Uruguay</Elu.ItemText><Elu.ItemIndicator /></Elu.Item>
+        </Elu.Viewport>
+        <Elu.Empty>No countries match.</Elu.Empty>
+      </Elu.Content>
+    </Elu.Root>
+  </div>
+  <CodeBlock code={code} lang="astro" />
+</section>

@@ -1,0 +1,17 @@
+---
+import type { EluItemProps } from '../src/types';
+
+export interface Props extends EluItemProps {}
+
+const { value, disabled = false, textValue, class: className } = Astro.props;
+---
+
+<div
+  data-elu-item
+  data-value={value}
+  data-text-value={textValue}
+  data-disabled={disabled ? 'true' : undefined}
+  class={className}
+>
+  <slot />
+</div>

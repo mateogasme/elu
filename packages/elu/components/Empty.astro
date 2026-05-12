@@ -1,0 +1,7 @@
+---
+const { class: className } = Astro.props;
+---
+
+<div data-elu-empty role="status" aria-live="polite" class={className}>
+  <slot>No results.</slot>
+</div>
