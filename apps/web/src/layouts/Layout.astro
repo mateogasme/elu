@@ -18,6 +18,13 @@ import '@mgasme/elu/styles.css';
     <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)" />
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='52' font-size='52' font-family='system-ui'%3E%C3%89%3C/text%3E%3C/svg%3E" />
     <title>Elu — composable Astro select</title>
+    <script is:inline>
+      (function () {
+        var stored;
+        try { stored = localStorage.getItem('elu-theme'); } catch (_) {}
+        document.documentElement.setAttribute('data-theme', stored === 'dark' ? 'dark' : 'light');
+      })();
+    </script>
   </head>
   <body class="min-h-dvh">
     <slot />
