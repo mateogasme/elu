@@ -4,17 +4,28 @@ import CodeBlock from './CodeBlock.astro';
 import InlineCode from './InlineCode.astro';
 
 const code = `<Elu.Root name="fruit">
-  <Elu.Trigger><Elu.Value placeholder="Pick a fruit" /></Elu.Trigger>
+  <Elu.Trigger>
+    <Elu.Value placeholder="Pick a fruit" />
+  </Elu.Trigger>
   <Elu.Content>
     <Elu.Viewport>
       <Elu.Group>
         <Elu.GroupLabel>Citrus</Elu.GroupLabel>
-        <Elu.Item value="orange"><Elu.ItemText>Orange</Elu.ItemText><Elu.ItemIndicator /></Elu.Item>
-        <Elu.Item value="lemon"><Elu.ItemText>Lemon</Elu.ItemText><Elu.ItemIndicator /></Elu.Item>
+        <Elu.Item value="orange">
+          <Elu.ItemText>Orange</Elu.ItemText>
+          <Elu.ItemIndicator />
+        </Elu.Item>
+        <Elu.Item value="lemon">
+          <Elu.ItemText>Lemon</Elu.ItemText>
+          <Elu.ItemIndicator />
+        </Elu.Item>
       </Elu.Group>
       <Elu.Group>
         <Elu.GroupLabel>Berries</Elu.GroupLabel>
-        <Elu.Item value="strawberry"><Elu.ItemText>Strawberry</Elu.ItemText><Elu.ItemIndicator /></Elu.Item>
+        <Elu.Item value="strawberry">
+          <Elu.ItemText>Strawberry</Elu.ItemText>
+          <Elu.ItemIndicator />
+        </Elu.Item>
       </Elu.Group>
     </Elu.Viewport>
   </Elu.Content>
