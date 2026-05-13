@@ -63,16 +63,9 @@
   appearance: none;
   border: 0;
   text-align: left;
-  transition: box-shadow 120ms var(--elu-easing);
+  transition: none;
 }
 
-@media (hover: hover) and (pointer: fine) {
-  [data-elu-trigger]:hover {
-    box-shadow:
-      0 0 0 1px var(--elu-border-strong),
-      0 1px 2px oklch(0 0 0 / 0.06);
-  }
-}
 
 [data-elu-trigger]:focus-visible {
   outline: 2px solid var(--elu-focus-ring);
@@ -124,7 +117,7 @@
   overflow: hidden;
   opacity: 0;
   transform: scale(0.96) translateY(-2px);
-  transform-origin: top left;
+  transform-origin: top center;
   will-change: transform, opacity;
   transition:
     opacity var(--elu-duration-close) var(--elu-easing),

@@ -1,25 +1,194 @@
 ---
+import { Elu } from '@mgasme/elu';
 import CodeBlock from './CodeBlock.astro';
 import InlineCode from './InlineCode.astro';
 
-const code = `/* Scope overrides to a single Root, or apply globally. */
-[data-elu-root] {
-  --elu-bg: oklch(1 0 0);
-  --elu-border: oklch(0.939 0 0);
-  --elu-text: oklch(0.204 0 0);
-  --elu-radius: 8px;
-  --elu-trigger-height: 36px;
-  --elu-item-height: 32px;
-  --elu-duration-open: 180ms;
-  --elu-duration-close: 140ms;
-  --elu-easing: cubic-bezier(0.23, 1, 0.32, 1);
+const items = [
+  { value: 'weekly',    label: 'Weekly'    },
+  { value: 'monthly',   label: 'Monthly'   },
+  { value: 'quarterly', label: 'Quarterly' },
+  { value: 'yearly',    label: 'Yearly'    },
+];
+
+const sharpCode = `[data-elu-root].sharp {
+  --elu-radius: 3px;
+  --elu-radius-item: 2px;
+}`;
+
+const pillCode = `[data-elu-root].pill {
+  --elu-radius: 100px;
+  --elu-radius-item: 6px;
+}`;
+
+const tintedCode = `[data-elu-root].tinted {
+  --elu-bg: oklch(0.963 0.013 258);
+  --elu-border: oklch(0.864 0.038 258);
+  --elu-item-bg-hover: oklch(0.944 0.022 258);
+  --elu-item-bg-active: oklch(0.922 0.033 258);
+}`;
+
+const allVarsCode = `[data-elu-root] {
+  /* Colors */
+  --elu-bg:                oklch(1 0 0);
+  --elu-border:            oklch(0.939 0 0);
+  --elu-text:              oklch(0.204 0 0);
+  --elu-text-muted:        oklch(0.537 0 0);
+  --elu-item-bg-hover:     oklch(0.97 0 0);
+  --elu-item-bg-active:    oklch(0.947 0 0);
+  --elu-shadow:            0 1px 2px oklch(0 0 0 / .04),
+                           0 8px 24px oklch(0 0 0 / .08);
+  --elu-focus-ring:        oklch(0.57 0.211 258);
+
+  /* Shape */
+  --elu-radius:            8px;
+  --elu-radius-item:       6px;
+
+  /* Size */
+  --elu-width:             min(280px, calc(100vw - 32px));
+  --elu-trigger-height:    36px;
+  --elu-item-height:       32px;
+  --elu-item-padding-x:    8px;
+  --elu-content-padding:   4px;
+  --elu-gap:               0px;
+
+  /* Typography */
+  --elu-font-size:         14px;
+  --elu-font-weight:       500;
+  --elu-font-weight-label: 600;
+
+  /* Animation */
+  --elu-duration-open:     180ms;
+  --elu-duration-close:    140ms;
+  --elu-easing:            cubic-bezier(0.23, 1, 0.32, 1);
 }`;
 ---
 
 <section id="customization">
   <h2 class="text-base font-medium text-[var(--page-fg)] mb-2 tracking-[-0.01em]">Customization</h2>
-  <p class="text-base leading-[1.55] text-[var(--page-fg)] mb-4">
-    All visual properties are <InlineCode>--elu-*</InlineCode> CSS variables, scoped to <InlineCode>[data-elu-root]</InlineCode>. Set them on the Root, a parent element, or globally.
+  <p class="text-base leading-[1.55] text-[var(--page-fg)] mb-6">
+    All visual properties are <InlineCode>--elu-*</InlineCode> CSS variables scoped to <InlineCode>[data-elu-root]</InlineCode>.
+    Override them on a single instance, a parent element, or globally — no config files, no CSS-in-JS.
   </p>
-  <CodeBlock code={code} lang="css" />
+
+  <div class="variants-list">
+
+    <div class="variant">
+      <p class="variant-label">Sharp</p>
+      <div class="demo-area">
+        <Elu.Root class="v-sharp" defaultValue="monthly">
+          <Elu.Trigger><Elu.Value placeholder="Select period" /></Elu.Trigger>
+          <Elu.Content>
+            <Elu.Viewport>
+              {items.map((i) => (
+                <Elu.Item value={i.value}>
+                  <Elu.ItemText>{i.label}</Elu.ItemText>
+                  <Elu.ItemIndicator />
+                </Elu.Item>
+              ))}
+            </Elu.Viewport>
+          </Elu.Content>
+        </Elu.Root>
+      </div>
+      <CodeBlock code={sharpCode} lang="css" />
+    </div>
+
+    <div class="variant">
+      <p class="variant-label">Pill</p>
+      <div class="demo-area">
+        <Elu.Root class="v-pill" defaultValue="monthly">
+          <Elu.Trigger><Elu.Value placeholder="Select period" /></Elu.Trigger>
+          <Elu.Content>
+            <Elu.Viewport>
+              {items.map((i) => (
+                <Elu.Item value={i.value}>
+                  <Elu.ItemText>{i.label}</Elu.ItemText>
+                  <Elu.ItemIndicator />
+                </Elu.Item>
+              ))}
+            </Elu.Viewport>
+          </Elu.Content>
+        </Elu.Root>
+      </div>
+      <CodeBlock code={pillCode} lang="css" />
+    </div>
+
+    <div class="variant">
+      <p class="variant-label">Tinted</p>
+      <div class="demo-area">
+        <Elu.Root class="v-tinted" defaultValue="monthly">
+          <Elu.Trigger><Elu.Value placeholder="Select period" /></Elu.Trigger>
+          <Elu.Content>
+            <Elu.Viewport>
+              {items.map((i) => (
+                <Elu.Item value={i.value}>
+                  <Elu.ItemText>{i.label}</Elu.ItemText>
+                  <Elu.ItemIndicator />
+                </Elu.Item>
+              ))}
+            </Elu.Viewport>
+          </Elu.Content>
+        </Elu.Root>
+      </div>
+      <CodeBlock code={tintedCode} lang="css" />
+    </div>
+
+  </div>
+
+  <p class="text-sm font-medium text-[var(--page-fg)] mt-8 mb-1">All variables</p>
+  <p class="text-sm text-[var(--page-muted)] mb-0 leading-[1.55]">
+    Scoped to <InlineCode>[data-elu-root]</InlineCode> so multiple instances on the same page theme independently.
+    Dark mode is layered on the same vars — override them per-instance with <InlineCode>data-theme="dark"</InlineCode>.
+  </p>
+  <CodeBlock code={allVarsCode} lang="css" />
 </section>
+
+<style is:global>
+  .v-sharp {
+    --elu-radius: 3px;
+    --elu-radius-item: 2px;
+  }
+
+  .v-pill {
+    --elu-radius: 100px;
+    --elu-radius-item: 6px;
+  }
+
+  .v-tinted {
+    --elu-bg: oklch(0.963 0.013 258);
+    --elu-border: oklch(0.864 0.038 258);
+    --elu-item-bg-hover: oklch(0.944 0.022 258);
+    --elu-item-bg-active: oklch(0.922 0.033 258);
+  }
+
+  [data-theme="dark"] .v-tinted:not([data-theme="light"]) {
+    --elu-bg: oklch(0.228 0.028 258);
+    --elu-border: oklch(0.328 0.042 258);
+    --elu-item-bg-hover: oklch(0.278 0.032 258);
+    --elu-item-bg-active: oklch(0.328 0.042 258);
+  }
+</style>
+
+<style>
+  .variants-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .variant-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--page-fg);
+    margin: 0 0 10px;
+  }
+
+  .demo-area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+    border-radius: 6px;
+    background: var(--page-demo-bg);
+    box-shadow: 0 0 0 1px var(--page-border);
+  }
+</style>
