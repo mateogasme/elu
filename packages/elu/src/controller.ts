@@ -26,9 +26,13 @@ export class EluController {
   private defaultSelected: string[];
   private highlightIndex = -1;
   private isOpen = false;
+  private closeSource: 'programmatic' | 'external' = 'external';
 
   private typeaheadBuffer = '';
   private typeaheadTimer: number | null = null;
+
+  private searchDebounceMs = 0;
+  private searchDebounceTimer: number | null = null;
 
   private baseId: string;
   private useAnchorFallback = false;
@@ -54,6 +58,7 @@ export class EluController {
     this.required = root.dataset.required === 'true';
     this.name = root.dataset.name || undefined;
     this.placeholder = this.valueEl?.dataset.placeholder ?? '';
+    this.searchDebounceMs = Number(this.searchInput?.dataset.debounceMs ?? 0);
 
     this.defaultSelected = this.parseInitial(root.dataset.valueInitial);
     this.defaultSelected.forEach((v) => this.selected.add(v));
@@ -85,6 +90,8 @@ export class EluController {
     if (this.searchInput) {
       this.searchInput.removeEventListener('input', this.onSearchInput);
     }
+    if (this.typeaheadTimer != null) window.clearTimeout(this.typeaheadTimer);
+    if (this.searchDebounceTimer != null) window.clearTimeout(this.searchDebounceTimer);
     const form = this.trigger.closest('form');
     if (form) form.removeEventListener('reset', this.onFormReset);
     if (this.useAnchorFallback) {
@@ -152,7 +159,8 @@ export class EluController {
     this.content.setAttribute('aria-labelledby', this.trigger.id);
 
     if (this.searchInput) {
-      this.searchInput.setAttribute('role', 'searchbox');
+      this.searchInput.setAttribute('role', 'combobox');
+      this.searchInput.setAttribute('aria-haspopup', 'listbox');
       this.searchInput.setAttribute('aria-autocomplete', 'list');
       this.searchInput.setAttribute('aria-expanded', 'false');
       this.searchInput.setAttribute('aria-controls', this.content.id);
@@ -330,6 +338,18 @@ export class EluController {
   };
 
   private onSearchInput = () => {
+    if (this.searchDebounceMs > 0) {
+      if (this.searchDebounceTimer != null) window.clearTimeout(this.searchDebounceTimer);
+      this.searchDebounceTimer = window.setTimeout(() => {
+        this.searchDebounceTimer = null;
+        this.applySearch();
+      }, this.searchDebounceMs);
+    } else {
+      this.applySearch();
+    }
+  };
+
+  private applySearch(): void {
     if (!this.searchInput) return;
     const q = normalize(this.searchInput.value);
     let firstVisible = -1;
@@ -341,7 +361,7 @@ export class EluController {
     });
     if (firstVisible !== -1) this.highlightItem(firstVisible);
     else this.clearHighlight();
-  };
+  }
 
   private onToggle = (e: ToggleEvent) => {
     if (e.newState === 'open') {
@@ -360,13 +380,19 @@ export class EluController {
       this.isOpen = false;
       this.root.dataset.state = 'closed';
       this.trigger.setAttribute('aria-expanded', 'false');
+      if (this.searchDebounceTimer != null) {
+        window.clearTimeout(this.searchDebounceTimer);
+        this.searchDebounceTimer = null;
+      }
       if (this.searchInput) {
         this.searchInput.setAttribute('aria-expanded', 'false');
         this.searchInput.value = '';
         this.items.forEach((it) => (it.hidden = false));
       }
       this.clearHighlight();
-      this.trigger.focus();
+      const wasProgrammatic = this.closeSource === 'programmatic';
+      this.closeSource = 'external';
+      if (wasProgrammatic) this.trigger.focus();
     }
   };
 
@@ -389,6 +415,7 @@ export class EluController {
 
   private close(): void {
     if (!this.isOpen) return;
+    this.closeSource = 'programmatic';
     this.content.hidePopover();
   }
 
@@ -589,14 +616,22 @@ export class EluController {
     if (!this.useAnchorFallback || !this.isOpen) return;
     const triggerRect = this.trigger.getBoundingClientRect();
     const sideOffset = Number(this.content.dataset.sideOffset || 4);
+    const collisionPadding = Number(this.content.dataset.collisionPadding || 8);
     const align = (this.content.dataset.align as 'start' | 'center' | 'end') || 'start';
     const side = (this.content.dataset.side as 'top' | 'bottom') || 'bottom';
     const contentRect = this.content.getBoundingClientRect();
+    const vw = document.documentElement.clientWidth;
+    const vh = document.documentElement.clientHeight;
 
-    let top = side === 'bottom' ? triggerRect.bottom + sideOffset : triggerRect.top - contentRect.height - sideOffset;
+    let top = side === 'bottom'
+      ? triggerRect.bottom + sideOffset
+      : triggerRect.top - contentRect.height - sideOffset;
     let left = triggerRect.left;
     if (align === 'center') left = triggerRect.left + triggerRect.width / 2 - contentRect.width / 2;
     if (align === 'end') left = triggerRect.right - contentRect.width;
+
+    left = Math.max(collisionPadding, Math.min(left, vw - contentRect.width - collisionPadding));
+    top = Math.max(collisionPadding, Math.min(top, vh - contentRect.height - collisionPadding));
 
     this.content.style.position = 'fixed';
     this.content.style.margin = '0';

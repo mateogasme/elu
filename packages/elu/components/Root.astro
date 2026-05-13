@@ -6,7 +6,6 @@ export interface Props extends EluRootProps {}
 const {
   id,
   name,
-  value,
   defaultValue,
   multiple = false,
   disabled = false,
@@ -17,11 +16,10 @@ const {
   class: className,
 } = Astro.props;
 
-const resolved = value !== undefined ? value : defaultValue;
-const initialArray: string[] = Array.isArray(resolved)
-  ? resolved.map(String)
-  : resolved != null && resolved !== ''
-  ? [String(resolved)]
+const initialArray: string[] = Array.isArray(defaultValue)
+  ? defaultValue.map(String)
+  : defaultValue != null && defaultValue !== ''
+  ? [String(defaultValue)]
   : [];
 const initialJson = JSON.stringify(initialArray);
 ---

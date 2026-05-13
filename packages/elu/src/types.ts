@@ -7,7 +7,6 @@ export type Theme = 'light' | 'dark';
 export interface EluRootProps {
   id?: string;
   name?: string;
-  value?: string | string[];
   defaultValue?: string | string[];
   multiple?: boolean;
   disabled?: boolean;
@@ -20,7 +19,6 @@ export interface EluRootProps {
 
 export interface EluTriggerProps {
   class?: string;
-  placeholder?: string;
 }
 
 export interface EluValueProps {
