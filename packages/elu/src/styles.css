@@ -17,7 +17,7 @@
   /* size + radius + spacing */
   --elu-radius: 8px;
   --elu-radius-content: var(--elu-radius);
-  --elu-radius-item: 6px;
+  --elu-radius-item: 4px;
   --elu-width: min(280px, calc(100vw - 32px));
   --elu-trigger-height: 36px;
   --elu-item-height: 32px;
@@ -316,7 +316,7 @@
   --elu-item-height: 28px;
   --elu-font-size: 13px;
   --elu-radius: 6px;
-  --elu-radius-item: 4px;
+  --elu-radius-item: 3px;
   --elu-item-padding-x: 6px;
   --elu-content-padding: 3px;
 }
@@ -326,7 +326,7 @@
   --elu-item-height: 38px;
   --elu-font-size: 15px;
   --elu-radius: 10px;
-  --elu-radius-item: 8px;
+  --elu-radius-item: 4px;
   --elu-item-padding-x: 10px;
   --elu-content-padding: 6px;
 }
