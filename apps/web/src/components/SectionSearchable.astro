@@ -10,9 +10,9 @@ const code = `<Elu.Root name="country">
   <Elu.Content>
     <Elu.Search placeholder="Search countries…" />
     <Elu.Viewport>
-      <Elu.Item value="ar"><Elu.ItemText>Argentina</Elu.ItemText></Elu.Item>
-      <Elu.Item value="br"><Elu.ItemText>Brazil</Elu.ItemText></Elu.Item>
-      <Elu.Item value="ca"><Elu.ItemText>Canada</Elu.ItemText></Elu.Item>
+      <Elu.Item value="ar"><Elu.ItemText>Argentina</Elu.ItemText><Elu.ItemIndicator /></Elu.Item>
+      <Elu.Item value="br"><Elu.ItemText>Brazil</Elu.ItemText><Elu.ItemIndicator /></Elu.Item>
+      <Elu.Item value="ca"><Elu.ItemText>Canada</Elu.ItemText><Elu.ItemIndicator /></Elu.Item>
     </Elu.Viewport>
     <Elu.Empty>No countries match.</Elu.Empty>
   </Elu.Content>
@@ -22,7 +22,7 @@ const code = `<Elu.Root name="country">
 <section id="searchable">
   <h2 class="text-base font-medium text-[var(--page-fg)] mb-2 tracking-[-0.01em]">Searchable</h2>
   <p class="text-base leading-[1.55] text-[var(--page-fg)] mb-4">Drop in <InlineCode>Elu.Search</InlineCode>. Items filter live as you type; pair with <InlineCode>Elu.Empty</InlineCode> for a fallback message.</p>
-  <div class="flex items-start py-6 px-4 rounded-[6px] bg-[var(--page-card-2)] shadow-[0_0_0_1px_var(--page-border)]">
+  <div class="flex items-center justify-center py-6 px-4 rounded-[6px] bg-[var(--page-demo-bg)] shadow-[0_0_0_1px_var(--page-border)]">
     <Elu.Root name="country">
       <Elu.Trigger><Elu.Value placeholder="Pick a country" /></Elu.Trigger>
       <Elu.Content>

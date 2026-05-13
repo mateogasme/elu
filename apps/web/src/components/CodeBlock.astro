@@ -5,14 +5,16 @@ interface Props {
   code?: string;
   lang?: string;
   copyFromActive?: string;
+  alwaysVisible?: boolean;
+  class?: string;
 }
 
-const { code, lang, copyFromActive } = Astro.props;
+const { code, lang, copyFromActive, alwaysVisible, class: className } = Astro.props;
 const themes = { light: 'github-light', dark: 'github-dark' } as const;
 const hasSlot = Astro.slots.has('default');
 ---
 
-<div class="cb-wrapper group relative mt-4 rounded-[6px] shadow-[0_0_0_1px_var(--page-border)] overflow-hidden bg-[var(--page-card)]">
+<div class:list={['cb-wrapper', className]} data-always-visible={alwaysVisible ? '' : undefined}>
   <button
     class="cb-copy"
     type="button"
@@ -22,12 +24,11 @@ const hasSlot = Astro.slots.has('default');
     data-copy-from-active={copyFromActive}
   >
     <span class="cb-icon-wrap">
-      <svg data-icon="copy" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
-        <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+      <svg data-icon="copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M8 17.929H6c-1.105 0-2-.912-2-2.036V5.036C4 3.91 4.895 3 6 3h8c1.105 0 2 .911 2 2.036v1.866m-6 .17h8c1.105 0 2 .91 2 2.035v10.857C20 21.09 19.105 22 18 22h-8c-1.105 0-2-.911-2-2.036V9.107c0-1.124.895-2.036 2-2.036z"/>
       </svg>
-      <svg data-icon="check" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="20 6 9 17 4 12"/>
+      <svg data-icon="check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 6L9 17l-5-5"/>
       </svg>
     </span>
   </button>
@@ -35,6 +36,15 @@ const hasSlot = Astro.slots.has('default');
 </div>
 
 <style>
+  .cb-wrapper {
+    position: relative;
+    margin-top: 16px;
+    border-radius: 6px;
+    border: 1px solid var(--page-border);
+    overflow: hidden;
+    background: var(--page-card);
+  }
+
   .cb-copy {
     position: absolute;
     top: 12px;
@@ -47,47 +57,39 @@ const hasSlot = Astro.slots.has('default');
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--page-card);
+    background: var(--page-bg);
     cursor: pointer;
     opacity: 0;
     color: var(--page-fg);
     padding: 0;
-    transition: background 200ms, box-shadow 200ms, opacity 200ms, transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
+    transition: opacity 200ms;
   }
 
   .cb-copy:focus-visible {
     opacity: 1;
     outline: none;
-    box-shadow: 0 0 0 1px var(--page-border-strong);
   }
 
-  .cb-copy:active {
-    transform: scale(0.97);
+  @media (hover: hover) and (pointer: fine) {
+    .cb-wrapper:hover .cb-copy {
+      opacity: 1;
+    }
   }
 
-  /* Touch / no-hover devices: keep the button always visible since there is */
-  /* no hover affordance to reveal it.                                       */
   @media (hover: none), (pointer: coarse) {
     .cb-copy {
       opacity: 1;
     }
   }
 
-  @media (hover: hover) and (pointer: fine) {
-    .cb-wrapper:hover .cb-copy,
-    .cb-wrapper:focus-within .cb-copy {
-      opacity: 1;
-    }
-
-    .cb-copy:hover {
-      background: var(--page-hover);
-    }
+  .cb-wrapper[data-always-visible] .cb-copy {
+    opacity: 1;
   }
 
   .cb-icon-wrap {
     position: relative;
-    width: 13px;
-    height: 13px;
+    width: 14px;
+    height: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -166,17 +168,7 @@ const hasSlot = Astro.slots.has('default');
       }
       if (!payload) return;
 
-      try {
-        await navigator.clipboard.writeText(payload);
-      } catch {
-        const ta = document.createElement('textarea');
-        ta.value = payload;
-        ta.style.cssText = 'position:fixed;opacity:0';
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        ta.remove();
-      }
+      await navigator.clipboard.writeText(payload);
 
       if (reset) {
         clearTimeout(reset);

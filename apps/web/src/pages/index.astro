@@ -7,6 +7,7 @@ import SectionSearchable from '../components/SectionSearchable.astro';
 import SectionGrouped from '../components/SectionGrouped.astro';
 import SectionSizes from '../components/SectionSizes.astro';
 import SectionTheme from '../components/SectionTheme.astro';
+import SectionCustom from '../components/SectionCustom.astro';
 import SectionCustomization from '../components/SectionCustomization.astro';
 ---
 
@@ -24,11 +25,13 @@ import SectionCustomization from '../components/SectionCustomization.astro';
 
       <div class="flex flex-wrap justify-center gap-2 mt-6">
         <a
-          class="inline-flex items-center gap-1.5 px-4 h-9 rounded-lg text-sm font-medium no-underline bg-[var(--page-fg)] text-[var(--page-bg)] hover:opacity-90 [transition:transform_160ms_cubic-bezier(0.23,1,0.32,1),opacity_160ms_cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-[hsl(212_100%_47%)] focus-visible:outline-offset-2 motion-reduce:transition-none"
+          class="inline-flex items-center gap-1.5 px-4 h-9 rounded-lg text-sm font-medium no-underline bg-[var(--page-fg)] text-[var(--page-bg)] hover:opacity-90 [transition:transform_160ms_cubic-bezier(0.23,1,0.32,1),opacity_160ms_cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-[oklch(0.57_0.211_257.941)] focus-visible:outline-offset-2 motion-reduce:transition-none"
           href="#installation"
-        >Get started</a>
+        >
+          Get started
+        </a>
         <a
-          class="inline-flex items-center gap-1.5 px-4 h-9 rounded-lg text-sm font-medium no-underline bg-transparent text-[var(--page-fg)] shadow-[0_0_0_1px_var(--page-border)] hover:shadow-[0_0_0_1px_var(--page-border-strong)] [transition:transform_160ms_cubic-bezier(0.23,1,0.32,1),box-shadow_160ms_cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-[hsl(212_100%_47%)] focus-visible:outline-offset-2 motion-reduce:transition-none"
+          class="inline-flex items-center gap-1.5 px-4 h-9 rounded-lg text-sm font-medium no-underline bg-transparent text-[var(--page-fg)] shadow-[0_0_0_1px_var(--page-border)] hover:shadow-[0_0_0_1px_var(--page-border-strong)] [transition:transform_160ms_cubic-bezier(0.23,1,0.32,1),box-shadow_160ms_cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-[oklch(0.57_0.211_257.941)] focus-visible:outline-offset-2 motion-reduce:transition-none"
           href="https://github.com/mateogasme/elu"
           target="_blank"
           rel="noopener noreferrer"
@@ -50,6 +53,7 @@ import SectionCustomization from '../components/SectionCustomization.astro';
       <SectionGrouped />
       <SectionSizes />
       <SectionTheme />
+      <SectionCustom />
       <SectionCustomization />
     </div>
   </main>

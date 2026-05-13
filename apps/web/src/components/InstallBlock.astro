@@ -1,0 +1,162 @@
+---
+interface Props {
+  code: string;
+  class?: string;
+}
+
+const { code, class: className } = Astro.props;
+---
+
+<code
+  class:list={['ib-root', className]}
+  data-install-block
+  data-copy={code}
+  role="button"
+  tabindex="0"
+  aria-label={`Copy: ${code}`}
+>
+  <span class="ib-text">{code}</span>
+  <button class="ib-copy" type="button" aria-label="Copy command" tabindex="-1">
+    <span class="ib-icon-wrap">
+      <svg data-icon="copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M8 17.929H6c-1.105 0-2-.912-2-2.036V5.036C4 3.91 4.895 3 6 3h8c1.105 0 2 .911 2 2.036v1.866m-6 .17h8c1.105 0 2 .91 2 2.035v10.857C20 21.09 19.105 22 18 22h-8c-1.105 0-2-.911-2-2.036V9.107c0-1.124.895-2.036 2-2.036z"/>
+      </svg>
+      <svg data-icon="check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 6L9 17l-5-5"/>
+      </svg>
+    </span>
+  </button>
+</code>
+
+<style>
+  .ib-root {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    height: 40px;
+    padding: 0 6px 0 12px;
+    border-radius: 8px;
+    background: var(--page-card);
+    border: 1px solid var(--page-border);
+    font-family: var(--font-mono);
+    font-size: 13.5px;
+    color: var(--page-fg);
+    cursor: copy;
+    user-select: none;
+    outline: none;
+    transition: border-color 150ms ease;
+  }
+
+  .ib-root:focus-visible {
+    box-shadow: 0 0 0 2px oklch(0.57 0.211 257.941);
+  }
+
+  .ib-text {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .ib-copy {
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--page-bg);
+    border: 1px solid var(--page-border);
+    border-radius: 6px;
+    color: var(--page-fg);
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .ib-icon-wrap {
+    position: relative;
+    width: 14px;
+    height: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ib-icon-wrap svg {
+    position: absolute;
+  }
+
+  .ib-icon-wrap svg[data-icon='check'] {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+</style>
+
+<script>
+  const DURATION = 150;
+  const EASING = 'ease-out';
+
+  function animateOut(el: Element) {
+    return el.animate(
+      [
+        { opacity: 1, transform: 'scale(1)' },
+        { opacity: 0, transform: 'scale(0.5)' },
+      ],
+      { duration: DURATION, easing: EASING, fill: 'forwards' },
+    ).finished;
+  }
+
+  function animateIn(el: Element) {
+    return el.animate(
+      [
+        { opacity: 0, transform: 'scale(0.5)' },
+        { opacity: 1, transform: 'scale(1)' },
+      ],
+      { duration: DURATION, easing: EASING, fill: 'forwards' },
+    ).finished;
+  }
+
+  function boot() {
+    document.querySelectorAll<HTMLElement>('[data-install-block]').forEach((root) => {
+      if (root.dataset.installInited) return;
+      root.dataset.installInited = 'true';
+
+      const copyIcon = root.querySelector<SVGElement>('[data-icon="copy"]')!;
+      const checkIcon = root.querySelector<SVGElement>('[data-icon="check"]')!;
+      let reset: ReturnType<typeof setTimeout> | null = null;
+      let busy = false;
+
+      async function doCopy() {
+        const text = root.dataset.copy ?? '';
+        if (!text) return;
+        await navigator.clipboard.writeText(text);
+
+        if (reset) { clearTimeout(reset); reset = null; }
+        if (!busy) {
+          busy = true;
+          await animateOut(copyIcon);
+          await animateIn(checkIcon);
+          busy = false;
+        }
+        reset = setTimeout(async () => {
+          if (!busy) {
+            busy = true;
+            await animateOut(checkIcon);
+            await animateIn(copyIcon);
+            busy = false;
+          }
+          reset = null;
+        }, 2000);
+      }
+
+      root.addEventListener('click', doCopy);
+      root.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); doCopy(); }
+      });
+    });
+  }
+
+  boot();
+  document.addEventListener('astro:page-load', boot);
+</script>

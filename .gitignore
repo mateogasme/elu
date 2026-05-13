@@ -7,3 +7,11 @@ dist
 .env.*
 !.env.example
 .vercel
+
+# Claude Code
+.agents
+skills-lock.json
+
+# Editor
+.idea
+.vscode

@@ -12,11 +12,9 @@ const code = `<!-- inherits from any ancestor with data-theme="dark" -->
 <section id="theme">
   <h2 class="text-base font-medium text-[var(--page-fg)] mb-2 tracking-[-0.01em]">Theme</h2>
   <p class="text-base leading-[1.55] text-[var(--page-fg)] mb-4">
-    The component reads its palette from CSS variables. Toggle the demo
-    below. Every surface (page, select, code block) crossfades in
-    lockstep.
+    Colors come from CSS variables. The toggle below switches the whole page at once.
   </p>
-  <div class="flex items-start py-6 px-4 rounded-[6px] bg-[var(--page-card-2)] shadow-[0_0_0_1px_var(--page-border)]">
+  <div class="flex items-center justify-center py-6 px-4 rounded-[6px] bg-[var(--page-demo-bg)] shadow-[0_0_0_1px_var(--page-border)]">
     <Elu.Root id="theme-select" defaultValue="light">
       <Elu.Trigger><Elu.Value /></Elu.Trigger>
       <Elu.Content>
@@ -32,7 +30,7 @@ const code = `<!-- inherits from any ancestor with data-theme="dark" -->
 
 <script>
   const STORAGE_KEY = 'elu-theme';
-  const TRANSITION_MS = 220;
+  const TRANSITION_MS = 160;
   const html = document.documentElement;
   const themeSelect = document.getElementById('theme-select') as
     | (HTMLElement & {
@@ -46,6 +44,7 @@ const code = `<!-- inherits from any ancestor with data-theme="dark" -->
   const setTheme = (theme: 'light' | 'dark', animate = true) => {
     if (animate) {
       html.classList.add('theme-transitioning');
+      void html.offsetHeight; // force reflow so transition fires from current state
       window.clearTimeout(transitionTimer);
       transitionTimer = window.setTimeout(() => {
         html.classList.remove('theme-transitioning');

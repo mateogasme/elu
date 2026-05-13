@@ -82,3 +82,5 @@ All visuals controlled by `--elu-*` vars scoped to `[data-elu-root]` (not `:root
 - **`workspace:*` will break npm.** Always use `"*"` in the consuming app's `package.json`.
 - **Animation defaults are intentional.** When touching `src/styles.css`, preserve the Emil rules above (transform/opacity only, ease-out, exit faster than entry, no animation on highlight movement, reduced-motion bypass).
 - **CSS vars are scoped to `[data-elu-root]`**, never `:root`. Page-level vars in `apps/web/src/styles/globals.css` use `--page-*`.
+- **All colors use `oklch()`** — never `hsl()`, `rgb()`, or hex. This applies to both `packages/elu/src/styles.css` and `apps/web/src/styles/globals.css`. Pure neutrals use `oklch(L 0 0)` (C=0, H=0).
+- **`InstallBlock.astro`** is a dedicated component for copyable install commands (single `<code role="button">` element, `cursor: copy`, WAAPI icon swap). Use it for `npm install` blocks. `CodeBlock.astro` is for multi-line code snippets and accepts an optional `class?` prop for layout overrides.

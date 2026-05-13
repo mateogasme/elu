@@ -30,11 +30,9 @@ import '@mgasme/elu/styles.css';
 <section id="usage">
   <h2 class="text-base font-medium text-[var(--page-fg)] mb-2 tracking-[-0.01em]">Usage</h2>
   <p class="text-base leading-[1.55] text-[var(--page-fg)] mb-4">
-    Render the compound parts inside <InlineCode>Elu.Root</InlineCode>. The
-    component ships with sensible defaults: animation, keyboard
-    navigation and ARIA wiring are handled for you.
+    Render the parts inside <InlineCode>Elu.Root</InlineCode>. Animation, keyboard navigation, and ARIA are built in.
   </p>
-  <div class="flex items-start py-6 px-4 rounded-[6px] bg-[var(--page-card-2)] shadow-[0_0_0_1px_var(--page-border)]">
+  <div class="flex items-center justify-center py-6 px-4 rounded-[6px] bg-[var(--page-demo-bg)] shadow-[0_0_0_1px_var(--page-border)]">
     <Elu.Root name="fruit" defaultValue="orange">
       <Elu.Trigger>
         <Elu.Value placeholder="Pick a fruit" />
