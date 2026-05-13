@@ -16,6 +16,7 @@
 
   /* size + radius + spacing */
   --elu-radius: 8px;
+  --elu-radius-content: var(--elu-radius);
   --elu-radius-item: 6px;
   --elu-width: min(280px, calc(100vw - 32px));
   --elu-trigger-height: 36px;
@@ -107,7 +108,7 @@
   max-width: 95vw;
   background: var(--elu-bg);
   color: var(--elu-text);
-  border-radius: var(--elu-radius);
+  border-radius: var(--elu-radius-content);
   box-shadow:
     0 0 0 1px var(--elu-border),
     var(--elu-shadow);

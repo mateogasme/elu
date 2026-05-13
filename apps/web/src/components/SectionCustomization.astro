@@ -17,6 +17,7 @@ const sharpCode = `[data-elu-root].sharp {
 
 const pillCode = `[data-elu-root].pill {
   --elu-radius: 100px;
+  --elu-radius-content: 12px;
   --elu-radius-item: 6px;
 }`;
 
@@ -41,6 +42,7 @@ const allVarsCode = `[data-elu-root] {
 
   /* Shape */
   --elu-radius:            8px;
+  --elu-radius-content:    var(--elu-radius);
   --elu-radius-item:       6px;
 
   /* Size */
@@ -134,8 +136,7 @@ const allVarsCode = `[data-elu-root] {
 
   </div>
 
-  <p class="text-sm font-medium text-[var(--page-fg)] mt-8 mb-1">All variables</p>
-  <p class="text-sm text-[var(--page-muted)] mb-0 leading-[1.55]">
+  <p class="text-base leading-[1.55] text-[var(--page-fg)] my-6">
     Scoped to <InlineCode>[data-elu-root]</InlineCode> so multiple instances on the same page theme independently.
     Dark mode is layered on the same vars — override them per-instance with <InlineCode>data-theme="dark"</InlineCode>.
   </p>
@@ -150,6 +151,7 @@ const allVarsCode = `[data-elu-root] {
 
   .v-pill {
     --elu-radius: 100px;
+    --elu-radius-content: 12px;
     --elu-radius-item: 6px;
   }
 
