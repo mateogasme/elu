@@ -6,7 +6,7 @@
   --page-fg: oklch(0.204 0 0);
   --page-muted: oklch(0.537 0 0);
   --page-card: oklch(0.992 0 0);
-  --page-card-2: oklch(0.979 0 0);
+  --page-card-2: oklch(0.944 0 0);
   --page-demo-bg: oklch(1 0 0);
   --page-border: oklch(0.939 0 0);
   --page-border-strong: oklch(0.892 0 0);
@@ -23,7 +23,7 @@ html[data-theme="dark"] {
   --page-fg: oklch(0.961 0 0);
   --page-muted: oklch(0.641 0 0);
   --page-card: oklch(0.216 0 0);
-  --page-card-2: oklch(0.248 0 0);
+  --page-card-2: oklch(0.268 0 0);
   --page-demo-bg: oklch(0.248 0 0);
   --page-border: oklch(0.321 0 0);
   --page-border-strong: oklch(0.418 0 0);
