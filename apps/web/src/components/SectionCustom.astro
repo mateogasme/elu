@@ -20,7 +20,9 @@ const accounts = [
 
 const code = `<Elu.Root id="workspace" class="account-switcher" defaultValue="stripe">
   <Elu.Trigger>
-    <span class="logo" data-brand="stripe"><!-- official SVG mark --></span>
+    <span class="logo" data-brand="stripe">
+      <!-- official SVG mark -->
+    </span>
     <Elu.Value placeholder="Switch workspace" />
   </Elu.Trigger>
   <Elu.Content>
@@ -55,8 +57,8 @@ const code = `<Elu.Root id="workspace" class="account-switcher" defaultValue="st
 </script>`;
 ---
 
-<section id="custom">
-  <h2 class="text-base font-medium text-[var(--page-fg)] mb-2 tracking-[-0.01em]">Custom items</h2>
+<section id="custom-markup">
+  <h2 class="text-base font-medium text-[var(--page-fg)] mb-2 tracking-[-0.01em]">Custom markup</h2>
   <p class="text-base leading-[1.55] text-[var(--page-fg)] mb-4">
     Items and triggers take any markup. Override <InlineCode>--elu-*</InlineCode> variables per
     instance to change width, height, and radius without affecting other selects on the page. Pass
@@ -178,6 +180,7 @@ const code = `<Elu.Root id="workspace" class="account-switcher" defaultValue="st
   }
   .account-switcher .sub {
     font-size: 11px;
+    font-weight: 400;
     color: var(--elu-text-muted);
     overflow: hidden;
     text-overflow: ellipsis;

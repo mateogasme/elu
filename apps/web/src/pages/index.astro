@@ -8,6 +8,8 @@ import SectionGrouped from '../components/SectionGrouped.astro';
 import SectionSizes from '../components/SectionSizes.astro';
 import SectionTheme from '../components/SectionTheme.astro';
 import SectionCustom from '../components/SectionCustom.astro';
+import SectionStatus from '../components/SectionStatus.astro';
+import SectionCommand from '../components/SectionCommand.astro';
 import SectionCustomization from '../components/SectionCustomization.astro';
 ---
 
@@ -20,7 +22,7 @@ import SectionCustomization from '../components/SectionCustomization.astro';
         Elu
       </h1>
       <p class="mt-1 text-base leading-[1.4] text-[var(--page-muted)]">
-        A composable Astro select.<br /> Single, multi, searchable, grouped.
+        A composable Astro select. Single, multi, searchable, grouped.
       </p>
 
       <div class="flex flex-wrap justify-center gap-2 mt-6">
@@ -53,8 +55,10 @@ import SectionCustomization from '../components/SectionCustomization.astro';
       <SectionGrouped />
       <SectionSizes />
       <SectionTheme />
-      <SectionCustom />
       <SectionCustomization />
+      <SectionCustom />
+      <SectionStatus />
+      <SectionCommand />
     </div>
   </main>
 </Layout>

@@ -1,0 +1,124 @@
+---
+import { Elu } from '@mgasme/elu';
+import CodeBlock from './CodeBlock.astro';
+import InlineCode from './InlineCode.astro';
+
+const newFileIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M9 15h6"/><path d="M12 18v-6"/></svg>`;
+const findIcon    = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>`;
+const gearIcon    = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg>`;
+const themeIcon   = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>`;
+const signOutIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/></svg>`;
+
+const actions = [
+  { value: 'new',      label: 'New file',     keys: ['⌘', 'N'],      icon: newFileIcon },
+  { value: 'find',     label: 'Find…',        keys: ['⌘', 'K'],      icon: findIcon    },
+  { value: 'settings', label: 'Settings',     keys: ['⌘', ','],      icon: gearIcon    },
+  { value: 'theme',    label: 'Toggle theme', keys: ['⌘', 'D'],      icon: themeIcon   },
+  { value: 'signout',  label: 'Sign out',     keys: ['⌘', '⇧', 'Q'], icon: signOutIcon },
+];
+
+const code = `<Elu.Root class="command-palette">
+  <Elu.Trigger>
+    <Elu.Value placeholder="Run command…" />
+  </Elu.Trigger>
+  <Elu.Content>
+    <Elu.Search placeholder="Type a command…" />
+    <Elu.Viewport>
+      <Elu.Item value="find" textValue="Find">
+        <span class="icon" aria-hidden="true"><!-- svg --></span>
+        <Elu.ItemText>Find…</Elu.ItemText>
+        <span class="shortcut" aria-hidden="true">
+          <kbd>⌘</kbd><kbd>K</kbd>
+        </span>
+      </Elu.Item>
+      <!-- …more actions -->
+    </Elu.Viewport>
+    <Elu.Empty>No commands match.</Elu.Empty>
+  </Elu.Content>
+</Elu.Root>`;
+---
+
+<section id="command">
+  <h2 class="text-base font-medium text-[var(--page-fg)] mb-2 tracking-[-0.01em]">Command palette</h2>
+  <p class="text-base leading-[1.55] text-[var(--page-fg)] mb-4">
+    Items take any layout. Drop an icon on the left, a label in the middle, and keyboard shortcuts on the right. Pair with <InlineCode>Elu.Search</InlineCode> for instant filtering.
+  </p>
+  <div class="flex items-center justify-center py-6 px-4 rounded-[6px] bg-[var(--page-demo-bg)] shadow-[0_0_0_1px_var(--page-border)]">
+    <Elu.Root class="command-palette">
+      <Elu.Trigger>
+        <Elu.Value placeholder="Run command…" />
+      </Elu.Trigger>
+      <Elu.Content>
+        <Elu.Search placeholder="Type a command…" />
+        <Elu.Viewport>
+          {actions.map((a) => (
+            <Elu.Item value={a.value} textValue={a.label}>
+              <span class="icon" aria-hidden="true" set:html={a.icon}></span>
+              <Elu.ItemText>{a.label}</Elu.ItemText>
+              <span class="shortcut" aria-hidden="true">
+                {a.keys.map((k) => <kbd>{k}</kbd>)}
+              </span>
+            </Elu.Item>
+          ))}
+        </Elu.Viewport>
+        <Elu.Empty>No commands match.</Elu.Empty>
+      </Elu.Content>
+    </Elu.Root>
+  </div>
+  <CodeBlock code={code} lang="astro" />
+</section>
+
+<style is:global>
+  .command-palette {
+    --elu-width: 320px;
+  }
+  .command-palette [data-elu-item] {
+    gap: 10px;
+  }
+  .command-palette [data-elu-item] [data-elu-item-indicator] {
+    display: none;
+  }
+  .command-palette .icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    color: var(--elu-text-muted);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .command-palette .icon svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .command-palette [data-elu-item-text] {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .command-palette .shortcut {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    flex-shrink: 0;
+  }
+  .command-palette kbd {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    font-weight: 500;
+    line-height: 1;
+    color: var(--elu-text-muted);
+    background: var(--page-card-2);
+    box-shadow: inset 0 0 0 1px var(--page-border);
+    border-radius: 4px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+</style>
