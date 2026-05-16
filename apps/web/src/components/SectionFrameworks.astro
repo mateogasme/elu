@@ -19,7 +19,6 @@
           </svg>
         </span>
         <span class="fw-name">Astro</span>
-        <span class="fw-badge fw-badge--available">Available</span>
       </div>
       <code class="fw-pkg">@mgasme/elu</code>
       <ul class="fw-notes">
@@ -41,7 +40,6 @@
           </svg>
         </span>
         <span class="fw-name">React</span>
-        <span class="fw-badge fw-badge--available">Available</span>
       </div>
       <code class="fw-pkg">@mgasme/elu-react</code>
       <ul class="fw-notes">
@@ -62,7 +60,6 @@
           </svg>
         </span>
         <span class="fw-name">Vue</span>
-        <span class="fw-badge fw-badge--available">Available</span>
       </div>
       <code class="fw-pkg">@mgasme/elu-vue</code>
       <ul class="fw-notes">
@@ -82,7 +79,6 @@
           </svg>
         </span>
         <span class="fw-name">Svelte</span>
-        <span class="fw-badge fw-badge--available">Available</span>
       </div>
       <code class="fw-pkg">@mgasme/elu-svelte</code>
       <ul class="fw-notes">
@@ -106,10 +102,6 @@
     box-shadow: 0 0 0 1px var(--page-border);
   }
 
-  .fw-card--soon {
-    opacity: 0.5;
-  }
-
   .fw-card-header {
     display: flex;
     align-items: center;
@@ -129,33 +121,6 @@
     font-weight: 500;
     color: var(--page-fg);
     flex: 1;
-  }
-
-  .fw-badge {
-    display: inline-flex;
-    align-items: center;
-    font-size: 11px;
-    font-weight: 600;
-    line-height: 1;
-    padding: 2px 6px;
-    border-radius: 4px;
-    letter-spacing: 0.01em;
-    white-space: nowrap;
-  }
-
-  .fw-badge--available {
-    background: oklch(0.944 0 0);
-    color: oklch(0.46 0 0);
-  }
-
-  html[data-theme="dark"] .fw-badge--available {
-    background: oklch(0.268 0 0);
-    color: oklch(0.72 0 0);
-  }
-
-  .fw-badge--soon {
-    background: var(--page-card-2);
-    color: var(--page-muted);
   }
 
   .fw-pkg {
