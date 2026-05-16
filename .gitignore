@@ -8,6 +8,11 @@ dist
 !.env.example
 .vercel
 
+# Playwright
+test-results
+playwright-report
+.playwright
+
 # Claude Code
 .agents
 skills-lock.json

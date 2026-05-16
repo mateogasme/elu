@@ -16,7 +16,8 @@ Run from the repo root (npm workspaces):
 - `npm run dev` — Astro dev server for `apps/web` at `http://localhost:4321`.
 - `npm run build` — production build of `apps/web`.
 - `npm run preview` — preview the production build.
-- `npm run check` — type-checks all six workspaces in order: `elu-core`, `elu`, `elu-react`, `elu-vue`, `elu-svelte`, `apps/web`. Use this as the type/diagnostics gate; there is no separate lint or test script.
+- `npm run check` — type-checks all six workspaces in order: `elu-core`, `elu`, `elu-react`, `elu-vue`, `elu-svelte`, `apps/web`. Use this as the type/diagnostics gate; there is no separate lint script.
+- `npm test` — runs the Playwright E2E suite against `apps/web` (auto-starts `astro dev`). All 4 framework wrappers route through the same `EluController`, so landing-level coverage exercises every wrapper at once.
 
 Workspace-scoped variants:
 
@@ -26,8 +27,10 @@ Workspace-scoped variants:
 - `npm run check -w packages/elu-vue` — type-check Vue package only (vue-tsc).
 - `npm run check -w packages/elu-svelte` — type-check Svelte package only (svelte-check).
 - `npm run dev -w apps/web` — same as `npm run dev`.
+- `npm run test -w apps/web` — Playwright run, same as `npm test`.
+- `npm run test:ui -w apps/web` — Playwright UI mode for debugging single specs.
 
-No test runner is wired up. No lint script. Verification = `npm run check` + manual UI walkthrough in the dev server.
+Verification = `npm run check` + `npm test`. No lint script.
 
 ## Architecture
 
@@ -107,6 +110,14 @@ All visuals controlled by `--elu-*` vars scoped to `[data-elu-root]` (not `:root
   - `CodeBlock.astro` accepts either a single `code` string (single pane) or a `codes={{ astro, react }}` object (dual pane with framework tabs). Dual-pane mode marks panes with `data-fw-pair` so global selectors don't accidentally match the per-size slotted panes in `SectionSizes.astro` (which use `data-framework` for a different reason).
   - **Dual-pane height sync** (`fixFwPaneHeights` IIFE in `CodeBlock.astro`): both framework panes are forced to a shared `max-height` so switching framework never reflows the page. Two-pass measurement: (1) temporarily force `display: block` on both panes (since `display: none` reports `scrollHeight = 0`), read `scrollHeight`, lock to the min; (2) measure `offsetHeight - clientHeight` to recover the height stolen by the X scrollbar, add it back. Re-run on a `MutationObserver` so Shiki/HMR re-renders don't desync the heights.
   - **Shiki `overflow-x` override**: Shiki injects `overflow-x: auto` as an inline style on `<pre class="astro-code">`, which beats any plain selector. The pane (not the `<pre>`) must own X scrolling so the scrollbar sits at the pane bottom, not the content bottom. `globals.css` uses `[data-code-pane][data-fw-pair] .astro-code { overflow-x: visible !important }` — the `!important` is load-bearing.
+
+## Testing
+
+- Playwright E2E suite lives in `apps/web/tests/`. Config is `apps/web/playwright.config.ts` (Chromium-only, auto-starts `astro dev` on port 4321, reuses an existing dev server locally).
+- Tests target controller behavior end-to-end through the landing demos. Because every framework wrapper (Astro/React/Vue/Svelte) routes through the same `EluController`, the landing-level suite is the de facto controller test suite.
+- Key selectors: `[data-elu-root][data-state="open|closed"]` for popover state, `[data-elu-item][data-selected="true"]` for selection, native `hidden` attribute for filtered items, `[data-elu-empty]` (CSS `:has()` toggled) for empty state.
+- Multi-select value label rule: 1 selected → label text, 2 selected → `"A, B"`, 3+ selected → `"N selected"`. Tests must click ≥3 items to assert the count-style label.
+- CI runs the suite in `.github/workflows/check.yml` (`test` job, after `check` job). Failure uploads `playwright-report` as an artifact.
 
 ## Deployment
 
