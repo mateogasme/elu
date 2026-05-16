@@ -1,11 +1,12 @@
 ---
 import '@fontsource-variable/geist';
+import '@fontsource-variable/geist-mono';
 import '../styles/globals.css';
 import '@mgasme/elu/styles.css';
 ---
 
 <!doctype html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="light" data-framework="astro">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -23,6 +24,10 @@ import '@mgasme/elu/styles.css';
         var stored;
         try { stored = localStorage.getItem('elu-theme'); } catch (_) {}
         document.documentElement.setAttribute('data-theme', stored === 'dark' ? 'dark' : 'light');
+        var fw;
+        try { fw = localStorage.getItem('elu-framework'); } catch (_) {}
+        var resolved = (fw === 'react' || fw === 'vue') ? fw : 'astro';
+        document.documentElement.setAttribute('data-framework', resolved);
       })();
     </script>
   </head>

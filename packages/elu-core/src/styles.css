@@ -1,0 +1,391 @@
+/* elu — scoped CSS variables on the Root element.                          */
+/* Declared on the component scope, not :root, so multiple instances can     */
+/* theme independently.                                                      */
+
+[data-elu-root] {
+  /* colors (light only) */
+  --elu-bg: oklch(1 0 0);
+  --elu-border: oklch(0.939 0 0);
+  --elu-border-strong: oklch(0.885 0 0);
+  --elu-text: oklch(0.204 0 0);
+  --elu-text-muted: oklch(0.537 0 0);
+  --elu-item-bg-hover: oklch(0.97 0 0);
+  --elu-item-bg-active: oklch(0.947 0 0);
+  --elu-shadow: 0 1px 2px oklch(0 0 0 / 0.04), 0 8px 24px oklch(0 0 0 / 0.08);
+  --elu-focus-ring: oklch(0.57 0.211 257.941);
+
+  /* size + radius + spacing */
+  --elu-radius: 8px;
+  --elu-radius-content: var(--elu-radius);
+  --elu-radius-item: 4px;
+  --elu-width: min(280px, calc(100vw - 32px));
+  --elu-trigger-height: 36px;
+  --elu-item-height: 32px;
+  --elu-item-padding-x: 8px;
+  --elu-content-padding: 4px;
+  --elu-gap: 0px;
+
+  /* typography */
+  --elu-font:
+    ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  --elu-font-size: 14px;
+  --elu-font-weight: 500;
+  --elu-font-weight-label: 600;
+
+  /* animation (Emil-canonical defaults; exposed for hardware/brand overrides) */
+  --elu-duration-open: 180ms;
+  --elu-duration-close: 140ms;
+  --elu-easing: cubic-bezier(0.23, 1, 0.32, 1);
+  position: relative;
+  display: inline-block;
+  font-family: var(--elu-font);
+}
+
+/* ── Trigger ────────────────────────────────────────────────────────────── */
+[data-elu-trigger] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: var(--elu-trigger-height);
+  min-width: var(--elu-width);
+  padding: 0 12px;
+  background: var(--elu-bg);
+  color: var(--elu-text);
+  border-radius: var(--elu-radius);
+  box-shadow:
+    0 0 0 1px var(--elu-border),
+    0 1px 2px oklch(0 0 0 / 0.04);
+  font: inherit;
+  font-size: var(--elu-font-size);
+  font-weight: var(--elu-font-weight);
+  cursor: pointer;
+  appearance: none;
+  border: 0;
+  text-align: left;
+  transition: none;
+}
+
+
+[data-elu-trigger]:focus-visible {
+  outline: 2px solid var(--elu-focus-ring);
+  outline-offset: 2px;
+}
+
+[data-elu-trigger][aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+[data-elu-icon] {
+  flex-shrink: 0;
+  color: var(--elu-text-muted);
+  transition: transform 180ms var(--elu-easing);
+}
+
+[data-elu-root][data-state="open"] [data-elu-icon] {
+  transform: rotate(180deg);
+}
+
+[data-elu-value] {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+[data-elu-value][data-empty="true"] {
+  color: var(--elu-text-muted);
+}
+
+/* ── Content (popover) ──────────────────────────────────────────────────── */
+[data-elu-content] {
+  position: fixed;
+  margin: 0;
+  padding: var(--elu-content-padding);
+  min-width: var(--elu-width);
+  max-width: 95vw;
+  background: var(--elu-bg);
+  color: var(--elu-text);
+  border-radius: var(--elu-radius-content);
+  box-shadow:
+    0 0 0 1px var(--elu-border),
+    var(--elu-shadow);
+  font-family: var(--elu-font);
+  font-size: var(--elu-font-size);
+  border: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: scale(0.96) translateY(-2px);
+  transform-origin: top center;
+  will-change: transform, opacity;
+  transition:
+    opacity var(--elu-duration-close) var(--elu-easing),
+    transform var(--elu-duration-close) var(--elu-easing),
+    overlay var(--elu-duration-close) var(--elu-easing) allow-discrete,
+    display var(--elu-duration-close) var(--elu-easing) allow-discrete;
+}
+
+/* anchor positioning (Chromium, Safari 26+). Firefox falls back to JS. */
+@supports (anchor-name: --x) {
+  [data-elu-content] {
+    position-area: bottom span-right;
+    margin-top: 4px;
+    /* Flip side when the natural placement collides with the viewport. */
+    position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
+  }
+  [data-elu-content][data-side="top"] {
+    position-area: top span-right;
+    margin-top: 0;
+    margin-bottom: 4px;
+  }
+  [data-elu-content][data-align="center"] {
+    position-area: bottom;
+    justify-self: anchor-center;
+  }
+  [data-elu-content][data-align="end"] {
+    position-area: bottom span-left;
+  }
+}
+
+[data-elu-content]:popover-open {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  transition-duration: var(--elu-duration-open);
+}
+
+@starting-style {
+  [data-elu-content]:popover-open {
+    opacity: 0;
+    transform: scale(0.96) translateY(-2px);
+  }
+}
+
+[data-elu-content][data-side="top"] {
+  transform-origin: bottom left;
+}
+[data-elu-content][data-align="center"] {
+  transform-origin: top center;
+}
+[data-elu-content][data-align="end"] {
+  transform-origin: top right;
+}
+[data-elu-content][data-side="top"][data-align="center"] {
+  transform-origin: bottom center;
+}
+[data-elu-content][data-side="top"][data-align="end"] {
+  transform-origin: bottom right;
+}
+
+/* ── Viewport ───────────────────────────────────────────────────────────── */
+[data-elu-viewport] {
+  display: flex;
+  flex-direction: column;
+  gap: var(--elu-gap);
+  max-height: min(320px, 50vh);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0;
+}
+
+/* ── Item ───────────────────────────────────────────────────────────────── */
+[data-elu-item] {
+  display: flex;
+  align-items: center;
+  gap: var(--elu-item-gap, 8px);
+  min-height: var(--elu-item-height);
+  padding: 0 var(--elu-item-padding-x);
+  border-radius: var(--elu-radius-item);
+  cursor: pointer;
+  user-select: none;
+  outline: none;
+  color: var(--elu-text);
+  font-weight: var(--elu-font-weight);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  [data-elu-item]:hover:not([data-disabled="true"]) {
+    background: var(--elu-item-bg-hover);
+  }
+}
+
+[data-elu-item][data-highlighted="true"] {
+  background: var(--elu-item-bg-active);
+}
+
+[data-elu-item][data-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+[data-elu-item-text] {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Indicator collapses its width + the row gap when unselected so trailing  */
+/* content (badges, pills) sits at the right edge. Selection smoothly       */
+/* re-opens space and fades the icon in. SVG is absolutely centered so the  */
+/* growing wrapper appears to expand from a point, not slide in.            */
+[data-elu-item-indicator] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  margin-left: 0;
+  color: var(--elu-text);
+  opacity: 1;
+  transform: scale(1);
+  transition:
+    opacity 160ms cubic-bezier(0.2, 0, 0, 1),
+    transform 160ms cubic-bezier(0.2, 0, 0, 1),
+    width 180ms cubic-bezier(0.2, 0, 0, 1),
+    margin-left 180ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+[data-elu-item-indicator] > * {
+  flex-shrink: 0;
+}
+
+[data-elu-item]:not([aria-selected="true"]) [data-elu-item-indicator] {
+  width: 0;
+  margin-left: calc(-1 * var(--elu-item-gap, 8px));
+  opacity: 0;
+  transform: scale(0.25);
+  transition:
+    opacity 120ms cubic-bezier(0.2, 0, 0, 1),
+    transform 180ms cubic-bezier(0.2, 0, 0, 1),
+    width 180ms cubic-bezier(0.2, 0, 0, 1),
+    margin-left 180ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* ── Group + GroupLabel + Separator ─────────────────────────────────────── */
+[data-elu-group-label] {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 8px var(--elu-item-padding-x) 4px;
+  font-size: 11px;
+  font-weight: var(--elu-font-weight-label);
+  color: var(--elu-text-muted);
+  background: var(--elu-bg);
+}
+
+[data-elu-separator] {
+  height: 1px;
+  margin: 4px 0;
+  background: var(--elu-border);
+}
+
+/* ── Search ─────────────────────────────────────────────────────────────── */
+[data-elu-search] {
+  padding: 4px 4px 6px;
+  border-bottom: 1px solid var(--elu-border);
+  margin: calc(var(--elu-content-padding) * -1)
+    calc(var(--elu-content-padding) * -1) var(--elu-content-padding);
+  background: var(--elu-bg);
+}
+
+[data-elu-search] input {
+  width: 100%;
+  height: 28px;
+  padding: 0 8px;
+  background: transparent;
+  border: 0;
+  outline: none;
+  font: inherit;
+  color: var(--elu-text);
+}
+
+[data-elu-search] input::placeholder {
+  color: var(--elu-text-muted);
+}
+
+[data-elu-search] input::-webkit-search-cancel-button,
+[data-elu-search] input::-webkit-search-decoration {
+  appearance: none;
+  display: none;
+}
+
+/* ── Empty (declarative show/hide via :has()) ───────────────────────────── */
+[data-elu-empty] {
+  padding: 16px var(--elu-item-padding-x);
+  text-align: center;
+  color: var(--elu-text-muted);
+  font-size: 13px;
+}
+
+[data-elu-content]:has([data-elu-item]:not([hidden]))
+  [data-elu-empty] {
+  display: none;
+}
+
+/* ── Size variants ──────────────────────────────────────────────────────── */
+[data-elu-root][data-size="sm"] {
+  --elu-trigger-height: 30px;
+  --elu-item-height: 28px;
+  --elu-font-size: 13px;
+  --elu-radius: 6px;
+  --elu-radius-item: 3px;
+  --elu-item-padding-x: 6px;
+  --elu-content-padding: 3px;
+}
+
+[data-elu-root][data-size="lg"] {
+  --elu-trigger-height: 44px;
+  --elu-item-height: 38px;
+  --elu-font-size: 15px;
+  --elu-radius: 10px;
+  --elu-radius-item: 4px;
+  --elu-item-padding-x: 10px;
+  --elu-content-padding: 6px;
+}
+
+[data-elu-root][data-size="sm"] [data-elu-trigger] {
+  padding: 0 10px;
+}
+[data-elu-root][data-size="lg"] [data-elu-trigger] {
+  padding: 0 14px;
+}
+
+/* ── Dark theme ─────────────────────────────────────────────────────────── */
+/* Applies when Root has [data-theme="dark"] OR any ancestor does (and Root */
+/* did not explicitly opt-out via [data-theme="light"]).                    */
+[data-elu-root][data-theme="dark"],
+[data-theme="dark"] [data-elu-root]:not([data-theme="light"]) {
+  --elu-bg: oklch(0.216 0 0);
+  --elu-border: oklch(0.301 0 0);
+  --elu-border-strong: oklch(0.399 0 0);
+  --elu-text: oklch(0.97 0 0);
+  --elu-text-muted: oklch(0.683 0 0);
+  --elu-item-bg-hover: oklch(0.28 0 0);
+  --elu-item-bg-active: oklch(0.341 0 0);
+  --elu-shadow:
+    0 1px 2px oklch(0 0 0 / 0.4), 0 8px 24px oklch(0 0 0 / 0.5);
+  --elu-focus-ring: oklch(0.661 0.184 254.685);
+}
+
+/* The Content lives in the top layer (popover) so ancestor selectors do not */
+/* reach it. Mirror the theme via inheritance: vars resolve from Root anyway */
+/* because Content reads --elu-* and styles cascade through CSS custom props. */
+
+/* ── Reduced motion ─────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  [data-elu-content],
+  [data-elu-trigger],
+  [data-elu-icon],
+  [data-elu-item-indicator] {
+    transition: none !important;
+  }
+  @starting-style {
+    [data-elu-content]:popover-open {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}

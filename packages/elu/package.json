@@ -1,6 +1,6 @@
 {
   "name": "@mgasme/elu",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "Composable Astro select component. Single, multi, searchable, grouped. Zero runtime dependencies.",
   "keywords": [
     "astro",
@@ -38,6 +38,9 @@
     "README.md",
     "LICENSE"
   ],
+  "dependencies": {
+    "@mgasme/elu-core": "*"
+  },
   "peerDependencies": {
     "astro": "^5.0.0 || ^6.0.0"
   },

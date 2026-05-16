@@ -76,8 +76,8 @@ const allVarsCode = `[data-elu-root] {
 <section id="css-variables">
   <h2 class="text-base font-medium text-[var(--page-fg)] mb-2 tracking-[-0.01em]">CSS variables</h2>
   <p class="text-base leading-[1.55] text-[var(--page-fg)] mb-6">
-    All visual properties are <InlineCode>--elu-*</InlineCode> CSS variables scoped to <InlineCode>[data-elu-root]</InlineCode>.
-    Override them per instance or globally. For effects beyond what the vars cover, target <InlineCode>[data-elu-trigger]</InlineCode> and <InlineCode>[data-elu-item]</InlineCode> selectors directly.
+    Every visual property is an <InlineCode>--elu-*</InlineCode> CSS variable, scoped to <InlineCode>[data-elu-root]</InlineCode>.
+    Override per instance or at any parent selector. Need something outside the vars? Target <InlineCode>[data-elu-trigger]</InlineCode> and <InlineCode>[data-elu-item]</InlineCode> directly.
   </p>
 
   <div class="flex flex-col gap-6">
@@ -165,8 +165,8 @@ const allVarsCode = `[data-elu-root] {
   </div>
 
   <p class="text-base leading-[1.55] text-[var(--page-fg)] my-6">
-    Scoped to <InlineCode>[data-elu-root]</InlineCode> so multiple instances on the same page theme independently.
-    Dark mode is layered on the same vars — override them per-instance with <InlineCode>data-theme="dark"</InlineCode>.
+    Each instance themes independently — nothing bleeds across roots.
+    Dark mode uses the same vars, so <InlineCode>data-theme="dark"</InlineCode> on any instance flips just that one.
   </p>
   <CodeBlock code={allVarsCode} lang="css" />
 </section>

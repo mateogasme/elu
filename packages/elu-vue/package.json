@@ -1,0 +1,60 @@
+{
+  "name": "@mgasme/elu-vue",
+  "version": "0.4.0",
+  "description": "Composable Vue 3 select component. Single, multi, searchable, grouped. Zero runtime dependencies.",
+  "keywords": [
+    "vue",
+    "vue3",
+    "select",
+    "combobox",
+    "listbox",
+    "dropdown",
+    "multi-select",
+    "searchable",
+    "popover",
+    "anchor-positioning",
+    "accessibility",
+    "a11y"
+  ],
+  "homepage": "https://github.com/mateogasme/elu#readme",
+  "bugs": {
+    "url": "https://github.com/mateogasme/elu/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mateogasme/elu.git"
+  },
+  "author": "mateogasme",
+  "type": "module",
+  "license": "MIT",
+  "exports": {
+    ".": "./src/index.ts",
+    "./styles.css": "./src/styles.css"
+  },
+  "files": [
+    "src",
+    "env.d.ts",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": [
+    "./src/styles.css"
+  ],
+  "peerDependencies": {
+    "vue": "^3.3.0"
+  },
+  "dependencies": {
+    "@mgasme/elu-core": "*"
+  },
+  "scripts": {
+    "check": "vue-tsc --noEmit"
+  },
+  "devDependencies": {
+    "vue": "^3.5.0",
+    "vue-tsc": "^2.1.0",
+    "typescript": "^5.9.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

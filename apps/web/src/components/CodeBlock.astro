@@ -1,38 +1,162 @@
 ---
-import { Code } from 'astro:components';
+import FwCode from './FwCode.astro';
 
 interface Props {
   code?: string;
   lang?: string;
+  /**
+   * Framework-scoped code variants. When provided, renders one pane per
+   * framework (Astro + React, plus optional Vue) and visibility is driven
+   * by html[data-framework].
+   */
+  codes?: { astro: string; react: string; vue?: string };
+  /** Per-framework language override. Defaults to "astro" / "tsx" / "vue". */
+  langs?: { astro?: string; react?: string; vue?: string };
   copyFromActive?: string;
   alwaysVisible?: boolean;
   class?: string;
 }
 
-const { code, lang, copyFromActive, alwaysVisible, class: className } = Astro.props;
-const themes = { light: 'github-light', dark: 'github-dark' } as const;
+const { code, lang, codes, langs, copyFromActive, alwaysVisible, class: className } = Astro.props;
 const hasSlot = Astro.slots.has('default');
+const astroLang = (langs?.astro ?? 'astro') as any;
+const reactLang = (langs?.react ?? 'tsx') as any;
+const vueLang = (langs?.vue ?? 'html') as any;
+const hasVue = !!codes?.vue;
+
+// Auto-generate a unique copy group id when using `codes`
+const fwGroupId = codes ? `fw-${Math.random().toString(36).slice(2, 9)}` : undefined;
+const copyGroup = copyFromActive ?? fwGroupId;
+
+// Fixed-height behavior for multi-framework blocks:
+//   height = min(lines across all provided panes) → shortest fits exactly,
+//   longer panes scroll. Every pane shares the same max-height, so switching
+//   never triggers reflow. Server-side calc to avoid measurement FOUC.
+// IMPORTANT: matches the explicit `line-height: 20px` set on .astro-code in
+// globals.css. Unitless line-height like 1.55 (=19.375px) caused sub-pixel
+// rounding mismatches → shorter pane would overflow by 1-2px.
+const LINE_HEIGHT_PX = 20;
+const PANE_PADDING_Y = 32; // 16px top + 16px bottom from .astro-code padding
+const paneMaxHeight = codes
+  ? Math.min(
+      ...[codes.astro, codes.react, codes.vue]
+        .filter((s): s is string => typeof s === 'string')
+        .map((s) => s.split('\n').length),
+    ) *
+      LINE_HEIGHT_PX +
+    PANE_PADDING_Y
+  : null;
+const paneStyle = paneMaxHeight ? `max-height: ${paneMaxHeight}px` : undefined;
+
 ---
 
 <div class:list={['cb-wrapper', className]} data-always-visible={alwaysVisible ? '' : undefined}>
-  <button
-    class="cb-copy"
-    type="button"
-    aria-label="Copy code"
-    data-codeblock-copy
-    data-copy={!copyFromActive ? code : undefined}
-    data-copy-from-active={copyFromActive}
-  >
-    <span class="cb-icon-wrap">
-      <svg data-icon="copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M8 17.929H6c-1.105 0-2-.912-2-2.036V5.036C4 3.91 4.895 3 6 3h8c1.105 0 2 .911 2 2.036v1.866m-6 .17h8c1.105 0 2 .91 2 2.035v10.857C20 21.09 19.105 22 18 22h-8c-1.105 0-2-.911-2-2.036V9.107c0-1.124.895-2.036 2-2.036z"/>
-      </svg>
-      <svg data-icon="check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M20 6L9 17l-5-5"/>
-      </svg>
-    </span>
-  </button>
-  {hasSlot ? <slot /> : code && lang && <Code {code} lang={lang as any} {themes} />}
+  {codes ? (
+    <!-- Framework header bar: switcher on left, copy on right -->
+    <div class="cb-fw-bar">
+      <div class="cb-fw-tabs">
+        <button
+          class="cb-fw-tab"
+          type="button"
+          data-fw-tab
+          data-fw="astro"
+          aria-label="Show Astro code"
+        >
+          <svg width="10" height="13" viewBox="0 0 85 107" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M27.59 91.136c-4.834-4.418-6.246-13.703-4.232-20.429 3.492 4.241 8.33 5.584 13.342 6.343 7.737 1.17 15.336.732 22.523-2.804.822-.405 1.582-.943 2.48-1.489.675 1.957.85 3.932.615 5.943-.573 4.896-3.01 8.678-6.885 11.545-1.55 1.147-3.19 2.172-4.79 3.253-4.917 3.323-6.247 7.22-4.4 12.888.044.139.084.277.183.614-2.51-1.124-4.344-2.76-5.742-4.911-1.475-2.27-2.177-4.78-2.214-7.498-.019-1.322-.019-2.656-.197-3.96-.434-3.178-1.926-4.601-4.737-4.683-2.884-.084-5.166 1.699-5.771 4.507-.046.216-.113.429-.18.68l.004.001Z"/>
+            <path d="M0 69.587s14.314-6.973 28.668-6.973L39.49 29.12c.405-1.62 1.588-2.72 2.924-2.72 1.335 0 2.518 1.1 2.924 2.72L56.16 62.614c17 0 28.668 6.973 28.668 6.973S60.514 3.352 60.467 3.219C59.769 1.261 58.591 0 57.003 0H27.827c-1.588 0-2.718 1.261-3.464 3.22C24.311 3.35 0 69.586 0 69.586Z"/>
+          </svg>
+          astro
+        </button>
+        <button
+          class="cb-fw-tab"
+          type="button"
+          data-fw-tab
+          data-fw="react"
+          aria-label="Show React code"
+        >
+          <svg width="15" height="13" viewBox="0 0 30 26" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <ellipse cx="15" cy="13" rx="14" ry="4.8" stroke="currentColor" stroke-width="1.4"/>
+            <ellipse cx="15" cy="13" rx="14" ry="4.8" stroke="currentColor" stroke-width="1.4" transform="rotate(60 15 13)"/>
+            <ellipse cx="15" cy="13" rx="14" ry="4.8" stroke="currentColor" stroke-width="1.4" transform="rotate(120 15 13)"/>
+            <circle cx="15" cy="13" r="2.4" fill="currentColor"/>
+          </svg>
+          react
+        </button>
+        {hasVue && (
+          <button
+            class="cb-fw-tab"
+            type="button"
+            data-fw-tab
+            data-fw="vue"
+            aria-label="Show Vue code"
+          >
+            <svg width="15" height="13" viewBox="0 0 256 221" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M204.8 0H256L128 220.8 0 0h97.92L128 51.2 157.44 0h47.36Z" fill="currentColor"/>
+              <path d="m0 0 128 220.8L256 0h-51.2L128 132.48 50.56 0H0Z" fill="currentColor"/>
+              <path d="M50.56 0 128 133.12 204.8 0h-47.36L128 51.2 97.92 0H50.56Z" fill="currentColor" opacity="0.55"/>
+            </svg>
+            vue
+          </button>
+        )}
+      </div>
+      <button
+        class="cb-copy"
+        type="button"
+        aria-label="Copy code"
+        data-codeblock-copy
+        data-copy-from-active={fwGroupId}
+      >
+        <span class="cb-icon-wrap">
+          <svg data-icon="copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 17.929H6c-1.105 0-2-.912-2-2.036V5.036C4 3.91 4.895 3 6 3h8c1.105 0 2 .911 2 2.036v1.866m-6 .17h8c1.105 0 2 .91 2 2.035v10.857C20 21.09 19.105 22 18 22h-8c-1.105 0-2-.911-2-2.036V9.107c0-1.124.895-2.036 2-2.036z"/>
+          </svg>
+          <svg data-icon="check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 6L9 17l-5-5"/>
+          </svg>
+        </span>
+      </button>
+    </div>
+  ) : (
+    <!-- Floating copy button for single-code blocks -->
+    <button
+      class="cb-copy"
+      type="button"
+      aria-label="Copy code"
+      data-codeblock-copy
+      data-copy={!copyGroup ? code : undefined}
+      data-copy-from-active={copyGroup}
+    >
+      <span class="cb-icon-wrap">
+        <svg data-icon="copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M8 17.929H6c-1.105 0-2-.912-2-2.036V5.036C4 3.91 4.895 3 6 3h8c1.105 0 2 .911 2 2.036v1.866m-6 .17h8c1.105 0 2 .91 2 2.035v10.857C20 21.09 19.105 22 18 22h-8c-1.105 0-2-.911-2-2.036V9.107c0-1.124.895-2.036 2-2.036z"/>
+        </svg>
+        <svg data-icon="check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 6L9 17l-5-5"/>
+        </svg>
+      </span>
+    </button>
+  )}
+
+  {hasSlot ? (
+    <slot />
+  ) : codes ? (
+    <>
+      <div data-code-pane data-fw-pair data-framework="astro" data-code-group={fwGroupId} data-active="true" style={paneStyle}>
+        <FwCode code={codes.astro} lang={astroLang} fw="astro" />
+      </div>
+      <div data-code-pane data-fw-pair data-framework="react" data-code-group={fwGroupId} data-active="true" style={paneStyle}>
+        <FwCode code={codes.react} lang={reactLang} fw="react" />
+      </div>
+      {hasVue && (
+        <div data-code-pane data-fw-pair data-framework="vue" data-code-group={fwGroupId} data-active="true" style={paneStyle}>
+          <FwCode code={codes.vue!} lang={vueLang} fw="vue" />
+        </div>
+      )}
+    </>
+  ) : code && lang ? (
+    <FwCode code={code} lang={lang} fw="astro" />
+  ) : null}
 </div>
 
 <style>
@@ -45,6 +169,74 @@ const hasSlot = Astro.slots.has('default');
     background: var(--page-card);
   }
 
+  /* ── Framework header bar ─────────────────────────────────────────────── */
+
+  .cb-fw-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 36px;
+    padding: 0 10px 0 14px;
+    box-shadow: 0 1px 0 var(--page-border);
+  }
+
+  .cb-fw-tabs {
+    display: flex;
+    align-items: stretch;
+    gap: 12px;
+    height: 100%;
+  }
+
+  .cb-fw-tab {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 100%;
+    padding: 0 2px;
+    background: transparent;
+    border: 0;
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.01em;
+    color: var(--page-muted);
+    white-space: nowrap;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .cb-fw-tab:hover {
+    color: var(--page-fg);
+  }
+
+  .cb-fw-tab:focus-visible {
+    outline: 2px solid oklch(0.57 0.211 257.941);
+    outline-offset: -2px;
+    border-radius: 2px;
+  }
+
+  .cb-fw-tab svg {
+    flex-shrink: 0;
+    display: block;
+    width: 16px;
+  }
+
+  /* Underline indicator — visible only on active tab (driven by globals.css) */
+  .cb-fw-tab::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background: var(--page-fg);
+    opacity: 0;
+  }
+
+  /* ── Copy button ──────────────────────────────────────────────────────── */
+
+  /* Floating (inside single-code blocks) */
   .cb-copy {
     position: absolute;
     top: 12px;
@@ -53,7 +245,7 @@ const hasSlot = Astro.slots.has('default');
     width: 26px;
     height: 26px;
     border: 1px solid var(--page-border);
-    border-radius: 6px;
+    border-radius: 5px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -63,6 +255,13 @@ const hasSlot = Astro.slots.has('default');
     color: var(--page-fg);
     padding: 0;
     transition: opacity 200ms;
+  }
+
+  /* Inline (inside fw-bar) — override absolute positioning */
+  .cb-fw-bar .cb-copy {
+    position: static;
+    opacity: 1;
+    flex-shrink: 0;
   }
 
   .cb-copy:focus-visible {
@@ -103,6 +302,43 @@ const hasSlot = Astro.slots.has('default');
     opacity: 0;
     transform: scale(0.5);
   }
+
+  /* ── Framework pane scroll ────────────────────────────────────────────── */
+  /* Both panes share max-height = min(astroLines, reactLines) × 20px + 32px */
+  /* (SSR estimate, corrected at runtime by fixFwPaneHeights). Pane owns      */
+  /* both axes of scroll → X scrollbar stays pinned to visible bottom edge.   */
+  /* Shiki injects overflow-x:auto inline on <pre>; globals.css overrides     */
+  /* it !important so the <pre> doesn't create its own X scroll container.    */
+
+  [data-code-pane][data-fw-pair] {
+    overflow-x: auto;
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+    /* Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: var(--page-border-strong) transparent;
+  }
+
+  [data-code-pane][data-fw-pair]::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  [data-code-pane][data-fw-pair]::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  [data-code-pane][data-fw-pair]::-webkit-scrollbar-thumb {
+    background-color: var(--page-border-strong);
+    border-radius: 999px;
+    /* Border in card color creates inset effect → effective 6px thumb */
+    border: 2px solid var(--page-card);
+    background-clip: padding-box;
+  }
+
+  [data-code-pane][data-fw-pair]::-webkit-scrollbar-thumb:hover {
+    background-color: var(--page-muted);
+  }
 </style>
 
 <script>
@@ -139,9 +375,19 @@ const hasSlot = Astro.slots.has('default');
       if (!payload) {
         const group = btn.getAttribute('data-copy-from-active');
         if (group) {
-          const active = document.querySelector<HTMLElement>(
-            `[data-code-group="${group}"][data-active="true"] pre`,
+          const fw = document.documentElement.getAttribute('data-framework') || 'astro';
+          // Prefer pane matching current framework first, fall back to any active pane.
+          const fwScoped = document.querySelector<HTMLElement>(
+            `[data-code-group="${group}"][data-active="true"][data-framework="${fw}"] pre`,
           );
+          const active =
+            fwScoped ??
+            document.querySelector<HTMLElement>(
+              `[data-code-group="${group}"][data-active="true"]:not([data-framework]) pre`,
+            ) ??
+            document.querySelector<HTMLElement>(
+              `[data-code-group="${group}"][data-active="true"] pre`,
+            );
           payload = active?.textContent ?? '';
         }
       }
@@ -159,6 +405,85 @@ const hasSlot = Astro.slots.has('default');
         showCopy();
         reset = null;
       }, 2000);
+    });
+  });
+
+  // Runtime height correction: SSR computes max-height from split('\n').length
+  // but Shiki may render a different number of lines (e.g. strips trailing
+  // newlines differently). Measure actual scrollHeight for each dual-framework
+  // pair and set both to the minimum, ensuring the shorter pane fits exactly
+  // with no spurious Y scroll.
+  // Touches `data-fw-pair` groups only (2 or 3 panes from CodeBlock's `codes`
+  // prop). Excludes SectionSizes' slotted multi-pane groups since those don't
+  // carry the `data-fw-pair` marker.
+  (function fixFwPaneHeights() {
+    const groups = new Set<string>();
+    document
+      .querySelectorAll<HTMLElement>('[data-fw-pair][data-code-group]')
+      .forEach((p) => groups.add(p.dataset.codeGroup!));
+
+    groups.forEach((group) => {
+      const panes = Array.from(
+        document.querySelectorAll<HTMLElement>(`[data-fw-pair][data-code-group="${group}"]`),
+      );
+      if (panes.length < 2) return;
+
+      // display:none → scrollHeight = 0. Force visible before measuring.
+      panes.forEach((p) => { p.style.display = 'block'; });
+
+      // Step 1: min of true content heights.
+      const minH = Math.min(...panes.map((p) => p.scrollHeight));
+      panes.forEach((p) => { p.style.maxHeight = `${minH}px`; });
+
+      // Step 2: if an X scrollbar appears it steals height
+      // (offsetHeight - clientHeight = X scrollbar px). Add it back so the
+      // shorter pane still fits without Y scroll.
+      const xScrollbarH = Math.max(...panes.map((p) => p.offsetHeight - p.clientHeight));
+      panes.forEach((p) => {
+        p.style.display = '';  // restore CSS-controlled display
+        p.style.maxHeight = `${minH + xScrollbarH}px`;
+      });
+    });
+  })();
+
+  // Reset every dual-framework pane's scroll position to top whenever the
+  // global framework changes. Fires for every trigger source (hero select,
+  // code block tabs, programmatic) since they all funnel through the
+  // html[data-framework] attribute.
+  new MutationObserver(() => {
+    document
+      .querySelectorAll<HTMLElement>('[data-fw-pair]')
+      .forEach((p) => {
+        p.scrollTop = 0;
+      });
+  }).observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['data-framework'],
+  });
+
+  // Framework tab click → switch global framework via hero select (single source of truth)
+  type HeroSelect = HTMLElement & {
+    __eluInstance?: { setValue: (v: string, opts?: { silent?: boolean }) => void };
+  };
+
+  document.querySelectorAll<HTMLButtonElement>('[data-fw-tab]').forEach((btn) => {
+    if (btn.dataset.fwTabInited) return;
+    btn.dataset.fwTabInited = 'true';
+
+    btn.addEventListener('click', () => {
+      const fw = btn.dataset.fw;
+      if (fw !== 'astro' && fw !== 'react' && fw !== 'vue') return;
+      if (document.documentElement.getAttribute('data-framework') === fw) return;
+
+      const heroSelect = document.getElementById('hero-fw') as HeroSelect | null;
+      if (heroSelect?.__eluInstance) {
+        // Drives elu:change → applyFramework() in index.astro (html attr + localStorage + trigger icon)
+        heroSelect.__eluInstance.setValue(fw);
+      } else {
+        // Fallback when hero select isn't present (defensive)
+        document.documentElement.setAttribute('data-framework', fw);
+        try { localStorage.setItem('elu-framework', fw); } catch {}
+      }
     });
   });
 </script>

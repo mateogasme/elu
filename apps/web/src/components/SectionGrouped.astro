@@ -3,7 +3,7 @@ import { Elu } from '@mgasme/elu';
 import CodeBlock from './CodeBlock.astro';
 import InlineCode from './InlineCode.astro';
 
-const code = `<Elu.Root name="fruit">
+const astroCode = `<Elu.Root name="fruit">
   <Elu.Trigger>
     <Elu.Value placeholder="Pick a fruit" />
   </Elu.Trigger>
@@ -30,11 +30,65 @@ const code = `<Elu.Root name="fruit">
     </Elu.Viewport>
   </Elu.Content>
 </Elu.Root>`;
+
+const reactCode = `const groups = [
+  { label: 'Citrus',  items: [{ value: 'orange', label: 'Orange' }, { value: 'lemon', label: 'Lemon' }] },
+  { label: 'Berries', items: [{ value: 'strawberry', label: 'Strawberry' }] },
+];
+
+<Elu.Root name="fruit">
+  <Elu.Trigger>
+    <Elu.Value placeholder="Pick a fruit" />
+  </Elu.Trigger>
+  <Elu.Content>
+    <Elu.Viewport>
+      {groups.map((g) => (
+        <Elu.Group key={g.label}>
+          <Elu.GroupLabel>{g.label}</Elu.GroupLabel>
+          {g.items.map((it) => (
+            <Elu.Item key={it.value} value={it.value}>
+              <Elu.ItemText>{it.label}</Elu.ItemText>
+              <Elu.ItemIndicator />
+            </Elu.Item>
+          ))}
+        </Elu.Group>
+      ))}
+    </Elu.Viewport>
+  </Elu.Content>
+</Elu.Root>`;
+
+const vueCode = `<script setup lang="ts">
+import { Elu } from '@mgasme/elu-vue';
+
+const groups = [
+  { label: 'Citrus',  items: [{ value: 'orange', label: 'Orange' }, { value: 'lemon', label: 'Lemon' }] },
+  { label: 'Berries', items: [{ value: 'strawberry', label: 'Strawberry' }] },
+];
+</script>
+
+<template>
+  <Elu.Root name="fruit">
+    <Elu.Trigger>
+      <Elu.Value placeholder="Pick a fruit" />
+    </Elu.Trigger>
+    <Elu.Content>
+      <Elu.Viewport>
+        <Elu.Group v-for="g in groups" :key="g.label">
+          <Elu.GroupLabel>{{ g.label }}</Elu.GroupLabel>
+          <Elu.Item v-for="it in g.items" :key="it.value" :value="it.value">
+            <Elu.ItemText>{{ it.label }}</Elu.ItemText>
+            <Elu.ItemIndicator />
+          </Elu.Item>
+        </Elu.Group>
+      </Elu.Viewport>
+    </Elu.Content>
+  </Elu.Root>
+</template>`;
 ---
 
 <section id="grouped">
   <h2 class="text-base font-medium text-[var(--page-fg)] mb-2 tracking-[-0.01em]">Grouped</h2>
-  <p class="text-base leading-[1.55] text-[var(--page-fg)] mb-4">Wrap related items in <InlineCode>Elu.Group</InlineCode> with a sticky <InlineCode>Elu.GroupLabel</InlineCode>. The group gets <InlineCode>role="group"</InlineCode> and <InlineCode>aria-labelledby</InlineCode> wired automatically.</p>
+  <p class="text-base leading-[1.55] text-[var(--page-fg)] mb-4">Wrap related items in <InlineCode>Elu.Group</InlineCode> with a sticky <InlineCode>Elu.GroupLabel</InlineCode>. <InlineCode>role="group"</InlineCode> and <InlineCode>aria-labelledby</InlineCode> are set automatically.</p>
   <div class="flex items-center justify-center py-6 px-4 rounded-[6px] bg-[var(--page-demo-bg)] shadow-[0_0_0_1px_var(--page-border)]">
     <Elu.Root defaultValue="orange">
       <Elu.Trigger><Elu.Value placeholder="Pick a fruit" /></Elu.Trigger>
@@ -56,5 +110,5 @@ const code = `<Elu.Root name="fruit">
       </Elu.Content>
     </Elu.Root>
   </div>
-  <CodeBlock code={code} lang="astro" />
+  <CodeBlock codes={{ astro: astroCode, react: reactCode, vue: vueCode }} />
 </section>

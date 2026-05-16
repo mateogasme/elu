@@ -1,0 +1,55 @@
+{
+  "name": "@mgasme/elu-react",
+  "version": "0.4.0",
+  "description": "Composable React select component. Single, multi, searchable, grouped. Zero runtime dependencies.",
+  "keywords": [
+    "react",
+    "select",
+    "combobox",
+    "listbox",
+    "dropdown",
+    "multi-select",
+    "searchable",
+    "popover",
+    "anchor-positioning",
+    "accessibility",
+    "a11y"
+  ],
+  "homepage": "https://github.com/mateogasme/elu#readme",
+  "bugs": {
+    "url": "https://github.com/mateogasme/elu/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mateogasme/elu.git"
+  },
+  "author": "mateogasme",
+  "type": "module",
+  "license": "MIT",
+  "exports": {
+    ".": "./src/index.tsx",
+    "./styles.css": "./src/styles.css"
+  },
+  "files": ["src", "README.md", "LICENSE"],
+  "sideEffects": ["./src/styles.css"],
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
+  },
+  "dependencies": {
+    "@mgasme/elu-core": "*"
+  },
+  "scripts": {
+    "check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "typescript": "^5.9.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

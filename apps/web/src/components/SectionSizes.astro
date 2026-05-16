@@ -1,11 +1,19 @@
 ---
-import { Code } from 'astro:components';
 import { Elu } from '@mgasme/elu';
 import CodeBlock from './CodeBlock.astro';
+import FwCode from './FwCode.astro';
 import InlineCode from './InlineCode.astro';
-
-const themes = { light: 'github-light', dark: 'github-dark' } as const;
-const snippets = {
+const astroSnippets = {
+  sm: `<Elu.Root size="sm">…</Elu.Root>`,
+  md: `<Elu.Root>…</Elu.Root>`,
+  lg: `<Elu.Root size="lg">…</Elu.Root>`,
+};
+const reactSnippets = {
+  sm: `<Elu.Root size="sm">…</Elu.Root>`,
+  md: `<Elu.Root>…</Elu.Root>`,
+  lg: `<Elu.Root size="lg">…</Elu.Root>`,
+};
+const vueSnippets = {
   sm: `<Elu.Root size="sm">…</Elu.Root>`,
   md: `<Elu.Root>…</Elu.Root>`,
   lg: `<Elu.Root size="lg">…</Elu.Root>`,
@@ -20,7 +28,7 @@ const snippets = {
     <button class="px-3 py-2 bg-[var(--page-card)] text-[var(--page-fg)] whitespace-nowrap rounded-[6px] text-[13px] font-medium font-[inherit] cursor-pointer border-0 shadow-[0_0_0_1px_var(--page-border)] transition-[background-color,box-shadow] duration-[180ms] [transition-timing-function:cubic-bezier(0.23,1,0.32,1)] hover:bg-[var(--page-hover)] hover:shadow-[0_0_0_1px_var(--page-border-strong)] data-[active=true]:bg-[var(--page-active)] data-[active=true]:shadow-[0_0_0_1px_var(--page-border-strong)] focus-visible:outline-2 focus-visible:outline-[oklch(0.57_0.211_257.941)] focus-visible:outline-offset-2" type="button" data-size="md" data-active="true">Medium</button>
     <button class="px-3 py-2 bg-[var(--page-card)] text-[var(--page-fg)] whitespace-nowrap rounded-[6px] text-[13px] font-medium font-[inherit] cursor-pointer border-0 shadow-[0_0_0_1px_var(--page-border)] transition-[background-color,box-shadow] duration-[180ms] [transition-timing-function:cubic-bezier(0.23,1,0.32,1)] hover:bg-[var(--page-hover)] hover:shadow-[0_0_0_1px_var(--page-border-strong)] data-[active=true]:bg-[var(--page-active)] data-[active=true]:shadow-[0_0_0_1px_var(--page-border-strong)] focus-visible:outline-2 focus-visible:outline-[oklch(0.57_0.211_257.941)] focus-visible:outline-offset-2" type="button" data-size="lg">Large</button>
   </div>
-  <div class="flex items-center justify-center py-6 px-4 rounded-[6px] bg-[var(--page-demo-bg)] shadow-[0_0_0_1px_var(--page-border)]">
+  <div class="flex items-center justify-center px-4 rounded-[6px] bg-[var(--page-demo-bg)] shadow-[0_0_0_1px_var(--page-border)]" style="height: 120px;">
     <Elu.Root id="size-preview" defaultValue="b">
       <Elu.Trigger><Elu.Value /></Elu.Trigger>
       <Elu.Content>
@@ -33,14 +41,32 @@ const snippets = {
     </Elu.Root>
   </div>
   <CodeBlock copyFromActive="size-code">
-    <div data-code-pane data-code-id="sm" data-code-group="size-code">
-      <Code code={snippets.sm} lang="astro" {themes} />
+    <div data-code-pane data-code-id="sm" data-code-group="size-code" data-framework="astro">
+      <FwCode code={astroSnippets.sm} lang="astro" fw="astro" />
     </div>
-    <div data-code-pane data-code-id="md" data-code-group="size-code" data-active="true">
-      <Code code={snippets.md} lang="astro" {themes} />
+    <div data-code-pane data-code-id="md" data-code-group="size-code" data-framework="astro" data-active="true">
+      <FwCode code={astroSnippets.md} lang="astro" fw="astro" />
     </div>
-    <div data-code-pane data-code-id="lg" data-code-group="size-code">
-      <Code code={snippets.lg} lang="astro" {themes} />
+    <div data-code-pane data-code-id="lg" data-code-group="size-code" data-framework="astro">
+      <FwCode code={astroSnippets.lg} lang="astro" fw="astro" />
+    </div>
+    <div data-code-pane data-code-id="sm" data-code-group="size-code" data-framework="react">
+      <FwCode code={reactSnippets.sm} lang="tsx" fw="react" />
+    </div>
+    <div data-code-pane data-code-id="md" data-code-group="size-code" data-framework="react" data-active="true">
+      <FwCode code={reactSnippets.md} lang="tsx" fw="react" />
+    </div>
+    <div data-code-pane data-code-id="lg" data-code-group="size-code" data-framework="react">
+      <FwCode code={reactSnippets.lg} lang="tsx" fw="react" />
+    </div>
+    <div data-code-pane data-code-id="sm" data-code-group="size-code" data-framework="vue">
+      <FwCode code={vueSnippets.sm} lang="html" fw="vue" />
+    </div>
+    <div data-code-pane data-code-id="md" data-code-group="size-code" data-framework="vue" data-active="true">
+      <FwCode code={vueSnippets.md} lang="html" fw="vue" />
+    </div>
+    <div data-code-pane data-code-id="lg" data-code-group="size-code" data-framework="vue">
+      <FwCode code={vueSnippets.lg} lang="html" fw="vue" />
     </div>
   </CodeBlock>
 </section>

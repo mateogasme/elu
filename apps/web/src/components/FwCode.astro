@@ -1,0 +1,20 @@
+---
+import { codeToHtml } from 'shiki';
+import { getThemes, type Framework } from '../utils/fw-shiki';
+
+interface Props {
+  code: string;
+  lang?: string;
+  fw: Framework;
+}
+
+const { code, lang = 'astro', fw } = Astro.props;
+const { light, dark } = getThemes(fw);
+
+const html = await codeToHtml(code, {
+  lang: lang as Parameters<typeof codeToHtml>[1]['lang'],
+  themes: { light, dark },
+});
+---
+
+<Fragment set:html={html} />

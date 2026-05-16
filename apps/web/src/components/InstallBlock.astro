@@ -1,42 +1,58 @@
 ---
 interface Props {
-  code: string;
+  code?: string;
+  codes?: { astro: string; react: string; vue?: string };
   class?: string;
 }
 
-const { code, class: className } = Astro.props;
+const { code, codes, class: className } = Astro.props;
+
+// When `codes` is supplied, render one block per framework. When `code` is
+// supplied, render a single block.
+const entries = codes
+  ? [
+      { fw: 'astro', value: codes.astro },
+      { fw: 'react', value: codes.react },
+      ...(codes.vue ? [{ fw: 'vue', value: codes.vue }] : []),
+    ]
+  : [{ fw: null as null, value: code ?? '' }];
 ---
 
-<code
-  class:list={['ib-root', className]}
-  data-install-block
-  data-copy={code}
-  role="button"
-  tabindex="0"
-  aria-label={`Copy: ${code}`}
->
-  <span class="ib-text">{code}</span>
-  <button class="ib-copy" type="button" aria-label="Copy command" tabindex="-1">
-    <span class="ib-icon-wrap">
-      <svg data-icon="copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M8 17.929H6c-1.105 0-2-.912-2-2.036V5.036C4 3.91 4.895 3 6 3h8c1.105 0 2 .911 2 2.036v1.866m-6 .17h8c1.105 0 2 .91 2 2.035v10.857C20 21.09 19.105 22 18 22h-8c-1.105 0-2-.911-2-2.036V9.107c0-1.124.895-2.036 2-2.036z"/>
-      </svg>
-      <svg data-icon="check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M20 6L9 17l-5-5"/>
-      </svg>
-    </span>
-  </button>
-</code>
+{entries.map((entry) => (
+  <code
+    class:list={['ib-root', className]}
+    data-install-block
+    data-fw-block={entry.fw ?? undefined}
+    data-copy={entry.value}
+    role="button"
+    tabindex="0"
+    aria-label={`Copy: ${entry.value}`}
+  >
+    <span class="ib-text">{entry.value}</span>
+    <button class="ib-copy" type="button" aria-label="Copy command" tabindex="-1">
+      <span class="ib-icon-wrap">
+        <svg data-icon="copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M8 17.929H6c-1.105 0-2-.912-2-2.036V5.036C4 3.91 4.895 3 6 3h8c1.105 0 2 .911 2 2.036v1.866m-6 .17h8c1.105 0 2 .91 2 2.035v10.857C20 21.09 19.105 22 18 22h-8c-1.105 0-2-.911-2-2.036V9.107c0-1.124.895-2.036 2-2.036z"/>
+        </svg>
+        <svg data-icon="check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 6L9 17l-5-5"/>
+        </svg>
+      </span>
+    </button>
+  </code>
+))}
 
 <style>
   .ib-root {
+    --ib-radius: 12px;
+    --ib-pad-right: 6px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 8px;
     height: 42px;
-    padding: 0 6px 0 12px;
-    border-radius: 12px;
+    padding: 0 var(--ib-pad-right) 0 12px;
+    border-radius: var(--ib-radius);
     background: var(--page-card);
     border: 1px solid var(--page-border);
     font-family: var(--font-mono);
@@ -68,7 +84,7 @@ const { code, class: className } = Astro.props;
     justify-content: center;
     background: var(--page-bg);
     border: 1px solid var(--page-border);
-    border-radius: 6px;
+    border-radius: calc(var(--ib-radius) - var(--ib-pad-right));
     color: var(--page-fg);
     cursor: pointer;
     padding: 0;

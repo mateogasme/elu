@@ -1,0 +1,25 @@
+{
+  "name": "@mgasme/elu-core",
+  "version": "0.4.0",
+  "description": "Framework-agnostic runtime for Elu: controller, keyboard, types, styles.",
+  "type": "module",
+  "license": "MIT",
+  "exports": {
+    ".": "./src/index.ts",
+    "./controller": "./src/controller.ts",
+    "./keyboard": "./src/keyboard.ts",
+    "./types": "./src/types.ts",
+    "./styles.css": "./src/styles.css"
+  },
+  "files": ["src", "README.md", "LICENSE"],
+  "sideEffects": ["./src/styles.css"],
+  "scripts": {
+    "check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

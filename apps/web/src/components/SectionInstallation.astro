@@ -1,9 +1,18 @@
 ---
 import InstallBlock from './InstallBlock.astro';
+import InlineCode from './InlineCode.astro';
 ---
 
 <section id="installation">
   <h2 class="text-base font-medium text-[var(--page-fg)] mb-2 tracking-[-0.01em]">Installation</h2>
-  <p class="text-base leading-[1.55] text-[var(--page-fg)] mb-4">Zero runtime dependencies. Requires Astro 5 or later. Import styles once in your layout.</p>
-  <InstallBlock code="npm install @mgasme/elu" />
+  <p class="text-base leading-[1.55] text-[var(--page-fg)] mb-4" data-fw-block="astro">
+    No runtime dependencies. Needs Astro 5+. Works with any Astro project out of the box. One style import in your layout.
+  </p>
+  <p class="text-base leading-[1.55] text-[var(--page-fg)] mb-4" data-fw-block="react">
+    No runtime dependencies. Works with React 18 and 19, including Next.js App Router. One style import in your layout.
+  </p>
+  <p class="text-base leading-[1.55] text-[var(--page-fg)] mb-4" data-fw-block="vue">
+    No runtime dependencies. Vue 3.3+ with <InlineCode>&lt;script setup&gt;</InlineCode>. Works with Vite and Nuxt. One style import in your entry.
+  </p>
+  <InstallBlock codes={{ astro: 'npm install @mgasme/elu', react: 'npm install @mgasme/elu-react', vue: 'npm install @mgasme/elu-vue' }} />
 </section>

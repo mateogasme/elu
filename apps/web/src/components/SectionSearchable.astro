@@ -3,7 +3,7 @@ import { Elu } from '@mgasme/elu';
 import CodeBlock from './CodeBlock.astro';
 import InlineCode from './InlineCode.astro';
 
-const code = `<Elu.Root name="country">
+const astroCode = `<Elu.Root name="country">
   <Elu.Trigger>
     <Elu.Value placeholder="Pick a country" />
   </Elu.Trigger>
@@ -26,11 +26,63 @@ const code = `<Elu.Root name="country">
     <Elu.Empty>No countries match.</Elu.Empty>
   </Elu.Content>
 </Elu.Root>`;
+
+const reactCode = `const countries = [
+  { value: 'ar', label: 'Argentina' },
+  { value: 'br', label: 'Brazil' },
+  { value: 'ca', label: 'Canada' },
+];
+
+<Elu.Root name="country">
+  <Elu.Trigger>
+    <Elu.Value placeholder="Pick a country" />
+  </Elu.Trigger>
+  <Elu.Content>
+    <Elu.Search placeholder="Search countries…" />
+    <Elu.Viewport>
+      {countries.map((c) => (
+        <Elu.Item key={c.value} value={c.value}>
+          <Elu.ItemText>{c.label}</Elu.ItemText>
+          <Elu.ItemIndicator />
+        </Elu.Item>
+      ))}
+    </Elu.Viewport>
+    <Elu.Empty>No countries match.</Elu.Empty>
+  </Elu.Content>
+</Elu.Root>`;
+
+const vueCode = `<script setup lang="ts">
+import { Elu } from '@mgasme/elu-vue';
+
+const countries = [
+  { value: 'ar', label: 'Argentina' },
+  { value: 'br', label: 'Brazil' },
+  { value: 'ca', label: 'Canada' },
+];
+</script>
+
+<template>
+  <Elu.Root name="country">
+    <Elu.Trigger>
+      <Elu.Value placeholder="Pick a country" />
+    </Elu.Trigger>
+    <Elu.Content>
+      <Elu.Search placeholder="Search countries…" />
+      <Elu.Viewport>
+        <Elu.Item v-for="c in countries" :key="c.value" :value="c.value">
+          <Elu.ItemText>{{ c.label }}</Elu.ItemText>
+          <Elu.ItemIndicator />
+        </Elu.Item>
+      </Elu.Viewport>
+      <Elu.Empty>No countries match.</Elu.Empty>
+    </Elu.Content>
+  </Elu.Root>
+</template>`;
 ---
 
 <section id="searchable">
   <h2 class="text-base font-medium text-[var(--page-fg)] mb-2 tracking-[-0.01em]">Searchable</h2>
-  <p class="text-base leading-[1.55] text-[var(--page-fg)] mb-4">Drop in <InlineCode>Elu.Search</InlineCode>. Items filter live as you type; pair with <InlineCode>Elu.Empty</InlineCode> for a fallback message.</p>
+  <p class="text-base leading-[1.55] text-[var(--page-fg)] mb-4">Drop in <InlineCode>Elu.Search</InlineCode>. Items filter as you type. Pair with <InlineCode>Elu.Empty</InlineCode> for a no-results message.</p>
   <div class="flex items-center justify-center py-6 px-4 rounded-[6px] bg-[var(--page-demo-bg)] shadow-[0_0_0_1px_var(--page-border)]">
     <Elu.Root name="country">
       <Elu.Trigger><Elu.Value placeholder="Pick a country" /></Elu.Trigger>
@@ -55,5 +107,5 @@ const code = `<Elu.Root name="country">
       </Elu.Content>
     </Elu.Root>
   </div>
-  <CodeBlock code={code} lang="astro" />
+  <CodeBlock codes={{ astro: astroCode, react: reactCode, vue: vueCode }} />
 </section>

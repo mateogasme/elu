@@ -2,7 +2,19 @@
 import { Elu } from '@mgasme/elu';
 import CodeBlock from './CodeBlock.astro';
 
-const code = `<!-- inherits from any ancestor with data-theme="dark" -->
+const astroCode = `<!-- inherits from any ancestor with data-theme="dark" -->
+<html data-theme="dark">…</html>
+
+<!-- or set per instance -->
+<Elu.Root theme="dark">…</Elu.Root>`;
+
+const reactCode = `// inherits from any ancestor with data-theme="dark"
+<html data-theme="dark">…</html>
+
+// or set per instance
+<Elu.Root theme="dark">…</Elu.Root>`;
+
+const vueCode = `<!-- inherits from any ancestor with data-theme="dark" -->
 <html data-theme="dark">…</html>
 
 <!-- or set per instance -->
@@ -12,7 +24,7 @@ const code = `<!-- inherits from any ancestor with data-theme="dark" -->
 <section id="theme">
   <h2 class="text-base font-medium text-[var(--page-fg)] mb-2 tracking-[-0.01em]">Theme</h2>
   <p class="text-base leading-[1.55] text-[var(--page-fg)] mb-4">
-    Colors come from CSS variables. The toggle below switches the whole page at once.
+    Colors live in CSS variables. The toggle below flips the whole page.
   </p>
   <div class="flex items-center justify-center py-6 px-4 rounded-[6px] bg-[var(--page-demo-bg)] shadow-[0_0_0_1px_var(--page-border)]">
     <Elu.Root id="theme-select" defaultValue="light">
@@ -25,7 +37,7 @@ const code = `<!-- inherits from any ancestor with data-theme="dark" -->
       </Elu.Content>
     </Elu.Root>
   </div>
-  <CodeBlock code={code} lang="astro" />
+  <CodeBlock codes={{ astro: astroCode, react: reactCode, vue: vueCode }} langs={{ react: 'jsx', vue: 'html' }} />
 </section>
 
 <script>

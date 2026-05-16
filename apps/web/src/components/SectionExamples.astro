@@ -18,7 +18,7 @@ const accounts = [
   { value: 'figma',   brand: 'figma',   name: 'Figma',   plan: 'Pro',        members: 31,  mark: figmaMark },
 ];
 
-const workspaceCode = `<Elu.Root id="workspace" class="account-switcher" defaultValue="stripe">
+const workspaceAstroCode = `<Elu.Root id="workspace" class="account-switcher" defaultValue="stripe">
   <Elu.Trigger>
     <span class="logo" data-brand="stripe">
       <!-- official SVG mark -->
@@ -55,6 +55,48 @@ const workspaceCode = `<Elu.Root id="workspace" class="account-switcher" default
     triggerLogo.innerHTML = src.innerHTML;
   });
 </script>`;
+
+const workspaceReactCode = `'use client';
+import { useState } from 'react';
+import { Elu } from '@mgasme/elu-react';
+
+const accounts = [
+  { value: 'stripe',  name: 'Stripe',  plan: 'Enterprise', members: 89,  mark: <StripeMark /> },
+  { value: 'vercel',  name: 'Vercel',  plan: 'Pro',        members: 38,  mark: <VercelMark /> },
+  { value: 'linear',  name: 'Linear',  plan: 'Pro',        members: 24,  mark: <LinearMark /> },
+];
+
+export function WorkspaceSwitcher() {
+  const [value, setValue] = useState('stripe');
+  const active = accounts.find((a) => a.value === value)!;
+
+  return (
+    <Elu.Root
+      className="account-switcher"
+      value={value}
+      onValueChange={(v) => setValue(v as string)}
+    >
+      <Elu.Trigger>
+        <span className="logo" data-brand={active.value}>{active.mark}</span>
+        <Elu.Value placeholder="Switch workspace" />
+      </Elu.Trigger>
+      <Elu.Content>
+        <Elu.Viewport>
+          {accounts.map((a) => (
+            <Elu.Item key={a.value} value={a.value} textValue={a.name}>
+              <span className="logo" data-brand={a.value}>{a.mark}</span>
+              <span className="meta">
+                <span className="title">{a.name}</span>
+                <span className="sub">{a.members} members · {a.plan}</span>
+              </span>
+              <Elu.ItemIndicator />
+            </Elu.Item>
+          ))}
+        </Elu.Viewport>
+      </Elu.Content>
+    </Elu.Root>
+  );
+}`;
 
 // ── Model picker ──────────────────────────────────────────────────────────────
 const anthropicMark = `<svg viewBox="0 0 92 65" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M66.46 0H51.18l27.4 64.6h15.28L66.46 0zM25.52 0L0 64.6h15.6l5.18-13.36h28.74l5.18 13.36h15.6L44.78 0H25.52zm.32 38.16l9.42-24.36 9.42 24.36H25.84z"/></svg>`;
@@ -93,7 +135,7 @@ const providers = [
   },
 ];
 
-const modelCode = `<Elu.Root id="model" class="model-picker" defaultValue="claude-sonnet-4-6">
+const modelAstroCode = `<Elu.Root id="model" class="model-picker" defaultValue="claude-sonnet-4-6">
   <Elu.Trigger>
     <span class="provider-mark" data-provider="anthropic">
       <!-- provider SVG -->
@@ -147,6 +189,68 @@ const modelCode = `<Elu.Root id="model" class="model-picker" defaultValue="claud
   });
 </script>`;
 
+const modelReactCode = `'use client';
+import { useState } from 'react';
+import { Elu } from '@mgasme/elu-react';
+
+const providers = [
+  {
+    id: 'anthropic',
+    name: 'Anthropic',
+    mark: <AnthropicMark />,
+    models: [
+      { value: 'claude-sonnet-4-6', name: 'Claude Sonnet 4.6', desc: 'Best for coding', ctx: '200K', price: '$3.00/M' },
+      { value: 'claude-opus-4-7',   name: 'Claude Opus 4.7',   desc: 'Most capable',    ctx: '200K', price: '$15.0/M' },
+    ],
+  },
+  // …more providers
+];
+
+export function ModelPicker() {
+  const [value, setValue] = useState('claude-sonnet-4-6');
+  const provider = providers.find((p) => p.models.some((m) => m.value === value))!;
+
+  return (
+    <Elu.Root
+      className="model-picker"
+      value={value}
+      onValueChange={(v) => setValue(v as string)}
+    >
+      <Elu.Trigger>
+        <span className="provider-mark" data-provider={provider.id}>{provider.mark}</span>
+        <Elu.Value placeholder="Select model" />
+      </Elu.Trigger>
+      <Elu.Content>
+        <Elu.Search placeholder="Search models…" />
+        <Elu.Viewport>
+          {providers.map((p) => (
+            <Elu.Group key={p.id}>
+              <Elu.GroupLabel>
+                <span className="provider-mark" data-provider={p.id}>{p.mark}</span>
+                <span>{p.name}</span>
+              </Elu.GroupLabel>
+              {p.models.map((m) => (
+                <Elu.Item key={m.value} value={m.value} textValue={m.name}>
+                  <span className="info">
+                    <span className="name">{m.name}</span>
+                    <span className="desc">{m.desc}</span>
+                  </span>
+                  <span className="badges">
+                    <span className="badge">{m.ctx}</span>
+                    <span className="badge">{m.price}</span>
+                  </span>
+                  <Elu.ItemIndicator />
+                </Elu.Item>
+              ))}
+            </Elu.Group>
+          ))}
+          <Elu.Empty>No models match.</Elu.Empty>
+        </Elu.Viewport>
+      </Elu.Content>
+    </Elu.Root>
+  );
+}`;
+
 // ── Assignee picker ───────────────────────────────────────────────────────────
 const members = [
   { id: 'mateo', name: 'Mateo Gasme',      email: 'mateo@elu.dev',  role: 'Owner',    online: true,  gradient: 0, initials: 'MG' },
@@ -157,7 +261,7 @@ const members = [
   { id: 'guido', name: 'Guido van Rossum', email: 'guido@elu.dev',  role: 'Engineer', online: true,  gradient: 0, initials: 'GR' },
 ];
 
-const assigneeCode = `<Elu.Root id="assignee" class="assignee-picker" multiple defaultValue={['mateo']}>
+const assigneeAstroCode = `<Elu.Root id="assignee" class="assignee-picker" multiple defaultValue={['mateo']}>
   <Elu.Trigger>
     <span class="stack" data-stack aria-hidden="true"></span>
     <span class="label" data-label>Assign…</span>
@@ -206,12 +310,217 @@ const assigneeCode = `<Elu.Root id="assignee" class="assignee-picker" multiple d
   render(JSON.parse(root.dataset.valueInitial || '[]'));
   root.addEventListener('elu:change', (e) => render(e.detail.value || []));
 </script>`;
+
+const assigneeReactCode = `'use client';
+import { useState } from 'react';
+import { Elu } from '@mgasme/elu-react';
+
+const members = [
+  { id: 'mateo', name: 'Mateo Gasme',  email: 'mateo@elu.dev',  role: 'Owner',    online: true,  gradient: 0, initials: 'MG' },
+  { id: 'ada',   name: 'Ada Lovelace', email: 'ada@elu.dev',    role: 'Engineer', online: true,  gradient: 1, initials: 'AL' },
+  // …more members
+];
+
+function Avatar({ m }: { m: typeof members[number] }) {
+  return (
+    <span className="avatar" data-gradient={m.gradient}>
+      <span className="initials">{m.initials}</span>
+      {m.online && <span className="online-dot" />}
+    </span>
+  );
+}
+
+export function AssigneePicker() {
+  const [values, setValues] = useState<string[]>(['mateo']);
+  const selected = values.map((v) => members.find((m) => m.id === v)!).filter(Boolean);
+
+  const label =
+    values.length === 0 ? 'Assign…'
+    : values.length === 1 ? selected[0].name
+    : \`\${values.length} assignees\`;
+
+  return (
+    <Elu.Root
+      className="assignee-picker"
+      multiple
+      value={values}
+      onValueChange={(v) => setValues(v as string[])}
+    >
+      <Elu.Trigger>
+        <span className="stack" aria-hidden="true">
+          {selected.slice(0, 3).map((m) => <Avatar key={m.id} m={m} />)}
+        </span>
+        <span className="label" data-empty={values.length === 0}>{label}</span>
+      </Elu.Trigger>
+      <Elu.Content>
+        <Elu.Search placeholder="Search people…" />
+        <Elu.Viewport>
+          {members.map((m) => (
+            <Elu.Item key={m.id} value={m.id} textValue={\`\${m.name} \${m.email}\`}>
+              <Avatar m={m} />
+              <span className="info">
+                <span className="name">{m.name}</span>
+                <span className="email">{m.email}</span>
+              </span>
+              <span className="role">{m.role}</span>
+              <Elu.ItemIndicator />
+            </Elu.Item>
+          ))}
+          <Elu.Empty>No people match.</Elu.Empty>
+        </Elu.Viewport>
+      </Elu.Content>
+    </Elu.Root>
+  );
+}`;
+
+// ── Vue equivalents ────────────────────────────────────────────────────────────
+const workspaceVueCode = `<script setup lang="ts">
+import { ref, computed } from 'vue';
+import { Elu } from '@mgasme/elu-vue';
+
+const accounts = [
+  { value: 'stripe', name: 'Stripe', plan: 'Enterprise', members: 89 },
+  { value: 'vercel', name: 'Vercel', plan: 'Pro',        members: 38 },
+  { value: 'linear', name: 'Linear', plan: 'Pro',        members: 24 },
+];
+
+const value = ref('stripe');
+const active = computed(() => accounts.find((a) => a.value === value.value)!);
+</script>
+
+<template>
+  <Elu.Root class="account-switcher" v-model="value">
+    <Elu.Trigger>
+      <span class="logo" :data-brand="active.value"><!-- brand SVG --></span>
+      <Elu.Value placeholder="Switch workspace" />
+    </Elu.Trigger>
+    <Elu.Content>
+      <Elu.Viewport>
+        <Elu.Item v-for="a in accounts" :key="a.value" :value="a.value" :text-value="a.name">
+          <span class="logo" :data-brand="a.value"><!-- brand SVG --></span>
+          <span class="meta">
+            <span class="title">{{ a.name }}</span>
+            <span class="sub">{{ a.members }} members · {{ a.plan }}</span>
+          </span>
+          <Elu.ItemIndicator />
+        </Elu.Item>
+      </Elu.Viewport>
+    </Elu.Content>
+  </Elu.Root>
+</template>`;
+
+const modelVueCode = `<script setup lang="ts">
+import { ref, computed } from 'vue';
+import { Elu } from '@mgasme/elu-vue';
+
+const providers = [
+  {
+    id: 'anthropic',
+    name: 'Anthropic',
+    models: [
+      { value: 'claude-sonnet-4-6', name: 'Claude Sonnet 4.6', desc: 'Best for coding', ctx: '200K', price: '$3.00/M' },
+      { value: 'claude-opus-4-7',   name: 'Claude Opus 4.7',   desc: 'Most capable',    ctx: '200K', price: '$15.0/M' },
+    ],
+  },
+  // …more providers
+];
+
+const value = ref('claude-sonnet-4-6');
+const provider = computed(() =>
+  providers.find((p) => p.models.some((m) => m.value === value.value))!,
+);
+</script>
+
+<template>
+  <Elu.Root class="model-picker" v-model="value">
+    <Elu.Trigger>
+      <span class="provider-mark" :data-provider="provider.id"><!-- mark --></span>
+      <Elu.Value placeholder="Select model" />
+    </Elu.Trigger>
+    <Elu.Content>
+      <Elu.Search placeholder="Search models…" />
+      <Elu.Viewport>
+        <Elu.Group v-for="p in providers" :key="p.id">
+          <Elu.GroupLabel>
+            <span class="provider-mark" :data-provider="p.id"><!-- mark --></span>
+            <span>{{ p.name }}</span>
+          </Elu.GroupLabel>
+          <Elu.Item v-for="m in p.models" :key="m.value" :value="m.value" :text-value="m.name">
+            <span class="info">
+              <span class="name">{{ m.name }}</span>
+              <span class="desc">{{ m.desc }}</span>
+            </span>
+            <span class="badges">
+              <span class="badge">{{ m.ctx }}</span>
+              <span class="badge">{{ m.price }}</span>
+            </span>
+            <Elu.ItemIndicator />
+          </Elu.Item>
+        </Elu.Group>
+        <Elu.Empty>No models match.</Elu.Empty>
+      </Elu.Viewport>
+    </Elu.Content>
+  </Elu.Root>
+</template>`;
+
+const assigneeVueCode = `<script setup lang="ts">
+import { ref, computed } from 'vue';
+import { Elu } from '@mgasme/elu-vue';
+
+const members = [
+  { id: 'mateo', name: 'Mateo Gasme',  email: 'mateo@elu.dev', role: 'Owner',    online: true,  gradient: 0, initials: 'MG' },
+  { id: 'ada',   name: 'Ada Lovelace', email: 'ada@elu.dev',   role: 'Engineer', online: true,  gradient: 1, initials: 'AL' },
+  // …more members
+];
+
+const values = ref<string[]>(['mateo']);
+const selected = computed(() =>
+  values.value.map((v) => members.find((m) => m.id === v)!).filter(Boolean),
+);
+const label = computed(() =>
+  values.value.length === 0 ? 'Assign…'
+  : values.value.length === 1 ? selected.value[0].name
+  : \`\${values.value.length} assignees\`,
+);
+</script>
+
+<template>
+  <Elu.Root class="assignee-picker" multiple v-model="values">
+    <Elu.Trigger>
+      <span class="stack" aria-hidden="true">
+        <span v-for="m in selected.slice(0, 3)" :key="m.id" class="avatar" :data-gradient="m.gradient">
+          <span class="initials">{{ m.initials }}</span>
+          <span v-if="m.online" class="online-dot" />
+        </span>
+      </span>
+      <span class="label" :data-empty="values.length === 0">{{ label }}</span>
+    </Elu.Trigger>
+    <Elu.Content>
+      <Elu.Search placeholder="Search people…" />
+      <Elu.Viewport>
+        <Elu.Item v-for="m in members" :key="m.id" :value="m.id" :text-value="m.name + ' ' + m.email">
+          <span class="avatar" :data-gradient="m.gradient">
+            <span class="initials">{{ m.initials }}</span>
+            <span v-if="m.online" class="online-dot" />
+          </span>
+          <span class="info">
+            <span class="name">{{ m.name }}</span>
+            <span class="email">{{ m.email }}</span>
+          </span>
+          <span class="role">{{ m.role }}</span>
+          <Elu.ItemIndicator />
+        </Elu.Item>
+        <Elu.Empty>No people match.</Elu.Empty>
+      </Elu.Viewport>
+    </Elu.Content>
+  </Elu.Root>
+</template>`;
 ---
 
 <section id="examples">
   <h2 class="text-base font-medium text-[var(--page-fg)] mb-2 tracking-[-0.01em]">Examples</h2>
   <p class="text-base leading-[1.55] text-[var(--page-fg)] mb-6">
-    Items and triggers accept any markup. Override <InlineCode>--elu-*</InlineCode> vars per instance or target <InlineCode>[data-elu-trigger]</InlineCode> and <InlineCode>[data-elu-item]</InlineCode> directly. Pass <InlineCode>textValue</InlineCode> so keyboard navigation and search work off plain text.
+    Items and triggers take any markup. Override <InlineCode>--elu-*</InlineCode> vars per instance or target <InlineCode>[data-elu-trigger]</InlineCode> and <InlineCode>[data-elu-item]</InlineCode> directly. Use <InlineCode>textValue</InlineCode> so keyboard nav and search have plain text to work with.
   </p>
 
   <div class="flex flex-col gap-8">
@@ -240,7 +549,7 @@ const assigneeCode = `<Elu.Root id="assignee" class="assignee-picker" multiple d
           </Elu.Content>
         </Elu.Root>
       </div>
-      <CodeBlock code={workspaceCode} lang="astro" />
+      <CodeBlock codes={{ astro: workspaceAstroCode, react: workspaceReactCode, vue: workspaceVueCode }} />
     </div>
 
     <div>
@@ -280,7 +589,7 @@ const assigneeCode = `<Elu.Root id="assignee" class="assignee-picker" multiple d
           </Elu.Content>
         </Elu.Root>
       </div>
-      <CodeBlock code={modelCode} lang="astro" />
+      <CodeBlock codes={{ astro: modelAstroCode, react: modelReactCode, vue: modelVueCode }} />
     </div>
 
     <div>
@@ -313,7 +622,7 @@ const assigneeCode = `<Elu.Root id="assignee" class="assignee-picker" multiple d
           </Elu.Content>
         </Elu.Root>
       </div>
-      <CodeBlock code={assigneeCode} lang="astro" />
+      <CodeBlock codes={{ astro: assigneeAstroCode, react: assigneeReactCode, vue: assigneeVueCode }} />
     </div>
 
   </div>
