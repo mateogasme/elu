@@ -93,8 +93,8 @@ import SectionCustomization from '../components/SectionCustomization.astro';
                 <Elu.ItemIndicator />
               </Elu.Item>
 
-              <!-- Svelte (disabled — coming soon) -->
-              <Elu.Item value="svelte" disabled>
+              <!-- Svelte -->
+              <Elu.Item value="svelte">
                 <span class="hfw-item-icon" aria-hidden="true">
                   <svg viewBox="0 0 256 308" width="11" height="14" xmlns="http://www.w3.org/2000/svg">
                     <path d="M239.682 40.707C211.113-.182 154.69-12.301 113.895 13.69L42.247 59.356a82.198 82.198 0 0 0-37.135 55.056 86.566 86.566 0 0 0 8.536 55.576 82.425 82.425 0 0 0-12.296 30.719 87.596 87.596 0 0 0 14.964 66.244c28.574 40.893 84.997 53.007 125.787 27.016l71.648-45.664a82.182 82.182 0 0 0 37.135-55.057 86.601 86.601 0 0 0-8.53-55.577 82.409 82.409 0 0 0 12.29-30.718 87.573 87.573 0 0 0-14.963-66.244" fill="#FF3E00"/>
@@ -102,7 +102,7 @@ import SectionCustomization from '../components/SectionCustomization.astro';
                   </svg>
                 </span>
                 <Elu.ItemText>Svelte</Elu.ItemText>
-                <span class="hfw-soon" aria-label="coming soon">Soon</span>
+                <Elu.ItemIndicator />
               </Elu.Item>
             </Elu.Viewport>
           </Elu.Content>
@@ -192,7 +192,7 @@ import SectionCustomization from '../components/SectionCustomization.astro';
     | null;
   const triggerIcon = heroFw?.querySelector<HTMLElement>('.hfw-trigger-icon');
 
-  function applyFramework(fw: 'astro' | 'react' | 'vue', persist: boolean) {
+  function applyFramework(fw: 'astro' | 'react' | 'vue' | 'svelte', persist: boolean) {
     document.documentElement.setAttribute('data-framework', fw);
     if (persist) {
       try { localStorage.setItem(STORAGE_KEY, fw); } catch {}
@@ -212,7 +212,8 @@ import SectionCustomization from '../components/SectionCustomization.astro';
   const initialFw = (document.documentElement.getAttribute('data-framework') || 'astro') as
     | 'astro'
     | 'react'
-    | 'vue';
+    | 'vue'
+    | 'svelte';
   requestAnimationFrame(() => {
     heroFw?.__eluInstance?.setValue(initialFw, { silent: true });
     applyFramework(initialFw, false);
@@ -221,7 +222,7 @@ import SectionCustomization from '../components/SectionCustomization.astro';
   heroFw?.addEventListener('elu:change', (e) => {
     const detail = (e as CustomEvent).detail as { value: string | string[] };
     const val = Array.isArray(detail.value) ? detail.value[0] : detail.value;
-    if (val === 'astro' || val === 'react' || val === 'vue') applyFramework(val, true);
+    if (val === 'astro' || val === 'react' || val === 'vue' || val === 'svelte') applyFramework(val, true);
   });
 
 </script>

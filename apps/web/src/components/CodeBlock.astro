@@ -6,12 +6,12 @@ interface Props {
   lang?: string;
   /**
    * Framework-scoped code variants. When provided, renders one pane per
-   * framework (Astro + React, plus optional Vue) and visibility is driven
-   * by html[data-framework].
+   * framework (Astro + React, plus optional Vue / Svelte) and visibility is
+   * driven by html[data-framework].
    */
-  codes?: { astro: string; react: string; vue?: string };
-  /** Per-framework language override. Defaults to "astro" / "tsx" / "vue". */
-  langs?: { astro?: string; react?: string; vue?: string };
+  codes?: { astro: string; react: string; vue?: string; svelte?: string };
+  /** Per-framework language override. Defaults to "astro" / "tsx" / "html" / "svelte". */
+  langs?: { astro?: string; react?: string; vue?: string; svelte?: string };
   copyFromActive?: string;
   alwaysVisible?: boolean;
   class?: string;
@@ -22,7 +22,9 @@ const hasSlot = Astro.slots.has('default');
 const astroLang = (langs?.astro ?? 'astro') as any;
 const reactLang = (langs?.react ?? 'tsx') as any;
 const vueLang = (langs?.vue ?? 'html') as any;
+const svelteLang = (langs?.svelte ?? 'svelte') as any;
 const hasVue = !!codes?.vue;
+const hasSvelte = !!codes?.svelte;
 
 // Auto-generate a unique copy group id when using `codes`
 const fwGroupId = codes ? `fw-${Math.random().toString(36).slice(2, 9)}` : undefined;
@@ -39,7 +41,7 @@ const LINE_HEIGHT_PX = 20;
 const PANE_PADDING_Y = 32; // 16px top + 16px bottom from .astro-code padding
 const paneMaxHeight = codes
   ? Math.min(
-      ...[codes.astro, codes.react, codes.vue]
+      ...[codes.astro, codes.react, codes.vue, codes.svelte]
         .filter((s): s is string => typeof s === 'string')
         .map((s) => s.split('\n').length),
     ) *
@@ -99,6 +101,20 @@ const paneStyle = paneMaxHeight ? `max-height: ${paneMaxHeight}px` : undefined;
             vue
           </button>
         )}
+        {hasSvelte && (
+          <button
+            class="cb-fw-tab"
+            type="button"
+            data-fw-tab
+            data-fw="svelte"
+            aria-label="Show Svelte code"
+          >
+            <svg width="11" height="14" viewBox="0 0 256 308" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M239.682 40.707C211.113-.182 154.69-12.301 113.895 13.69L42.247 59.356a82.198 82.198 0 0 0-37.135 55.056 86.566 86.566 0 0 0 8.536 55.576 82.425 82.425 0 0 0-12.296 30.719 87.596 87.596 0 0 0 14.964 66.244c28.574 40.893 84.997 53.007 125.787 27.016l71.648-45.664a82.182 82.182 0 0 0 37.135-55.057 86.601 86.601 0 0 0-8.53-55.577 82.409 82.409 0 0 0 12.29-30.718 87.573 87.573 0 0 0-14.963-66.244" fill="currentColor"/>
+            </svg>
+            svelte
+          </button>
+        )}
       </div>
       <button
         class="cb-copy"
@@ -151,6 +167,11 @@ const paneStyle = paneMaxHeight ? `max-height: ${paneMaxHeight}px` : undefined;
       {hasVue && (
         <div data-code-pane data-fw-pair data-framework="vue" data-code-group={fwGroupId} data-active="true" style={paneStyle}>
           <FwCode code={codes.vue!} lang={vueLang} fw="vue" />
+        </div>
+      )}
+      {hasSvelte && (
+        <div data-code-pane data-fw-pair data-framework="svelte" data-code-group={fwGroupId} data-active="true" style={paneStyle}>
+          <FwCode code={codes.svelte!} lang={svelteLang} fw="svelte" />
         </div>
       )}
     </>
@@ -472,7 +493,7 @@ const paneStyle = paneMaxHeight ? `max-height: ${paneMaxHeight}px` : undefined;
 
     btn.addEventListener('click', () => {
       const fw = btn.dataset.fw;
-      if (fw !== 'astro' && fw !== 'react' && fw !== 'vue') return;
+      if (fw !== 'astro' && fw !== 'react' && fw !== 'vue' && fw !== 'svelte') return;
       if (document.documentElement.getAttribute('data-framework') === fw) return;
 
       const heroSelect = document.getElementById('hero-fw') as HeroSelect | null;

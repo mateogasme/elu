@@ -19,6 +19,12 @@ const vueCode = `<!-- inherits from any ancestor with data-theme="dark" -->
 
 <!-- or set per instance -->
 <Elu.Root theme="dark">…</Elu.Root>`;
+
+const svelteCode = `<!-- inherits from any ancestor with data-theme="dark" -->
+<html data-theme="dark">…</html>
+
+<!-- or set per instance -->
+<Elu.Root theme="dark">…</Elu.Root>`;
 ---
 
 <section id="theme">
@@ -37,7 +43,7 @@ const vueCode = `<!-- inherits from any ancestor with data-theme="dark" -->
       </Elu.Content>
     </Elu.Root>
   </div>
-  <CodeBlock codes={{ astro: astroCode, react: reactCode, vue: vueCode }} langs={{ react: 'jsx', vue: 'html' }} />
+  <CodeBlock codes={{ astro: astroCode, react: reactCode, vue: vueCode, svelte: svelteCode }} langs={{ react: 'jsx', vue: 'html', svelte: 'html' }} />
 </section>
 
 <script>

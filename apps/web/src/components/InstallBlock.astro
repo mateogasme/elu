@@ -1,7 +1,7 @@
 ---
 interface Props {
   code?: string;
-  codes?: { astro: string; react: string; vue?: string };
+  codes?: { astro: string; react: string; vue?: string; svelte?: string };
   class?: string;
 }
 
@@ -14,6 +14,7 @@ const entries = codes
       { fw: 'astro', value: codes.astro },
       { fw: 'react', value: codes.react },
       ...(codes.vue ? [{ fw: 'vue', value: codes.vue }] : []),
+      ...(codes.svelte ? [{ fw: 'svelte', value: codes.svelte }] : []),
     ]
   : [{ fw: null as null, value: code ?? '' }];
 ---

@@ -57,6 +57,36 @@ const reactCode = `const groups = [
   </Elu.Content>
 </Elu.Root>`;
 
+const svelteCode = `<script lang="ts">
+  import { Elu } from '@mgasme/elu-svelte';
+
+  const groups = [
+    { label: 'Citrus',  items: [{ value: 'orange', label: 'Orange' }, { value: 'lemon', label: 'Lemon' }] },
+    { label: 'Berries', items: [{ value: 'strawberry', label: 'Strawberry' }] },
+  ];
+</script>
+
+<Elu.Root name="fruit">
+  <Elu.Trigger>
+    <Elu.Value placeholder="Pick a fruit" />
+  </Elu.Trigger>
+  <Elu.Content>
+    <Elu.Viewport>
+      {#each groups as g (g.label)}
+        <Elu.Group>
+          <Elu.GroupLabel>{g.label}</Elu.GroupLabel>
+          {#each g.items as it (it.value)}
+            <Elu.Item value={it.value}>
+              <Elu.ItemText>{it.label}</Elu.ItemText>
+              <Elu.ItemIndicator />
+            </Elu.Item>
+          {/each}
+        </Elu.Group>
+      {/each}
+    </Elu.Viewport>
+  </Elu.Content>
+</Elu.Root>`;
+
 const vueCode = `<script setup lang="ts">
 import { Elu } from '@mgasme/elu-vue';
 
@@ -110,5 +140,5 @@ const groups = [
       </Elu.Content>
     </Elu.Root>
   </div>
-  <CodeBlock codes={{ astro: astroCode, react: reactCode, vue: vueCode }} />
+  <CodeBlock codes={{ astro: astroCode, react: reactCode, vue: vueCode, svelte: svelteCode }} />
 </section>

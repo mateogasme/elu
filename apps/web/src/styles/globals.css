@@ -128,22 +128,18 @@ html[data-theme="dark"] .shiki span {
 /* Framework-scoped code panes — hide every pane whose framework isn't active.
    Pages reflow on framework change; CodeBlock.astro compensates by scroll-
    anchoring the clicked tab to its pre-reflow Y position. */
-html[data-framework="astro"] [data-code-pane][data-framework="react"],
-html[data-framework="astro"] [data-code-pane][data-framework="vue"],
-html[data-framework="react"] [data-code-pane][data-framework="astro"],
-html[data-framework="react"] [data-code-pane][data-framework="vue"],
-html[data-framework="vue"] [data-code-pane][data-framework="astro"],
-html[data-framework="vue"] [data-code-pane][data-framework="react"] {
+html:not([data-framework="astro"]) [data-code-pane][data-framework="astro"],
+html:not([data-framework="react"]) [data-code-pane][data-framework="react"],
+html:not([data-framework="vue"]) [data-code-pane][data-framework="vue"],
+html:not([data-framework="svelte"]) [data-code-pane][data-framework="svelte"] {
   display: none;
 }
 
 /* Framework-scoped install / inline blocks */
-html[data-framework="astro"] [data-fw-block="react"],
-html[data-framework="astro"] [data-fw-block="vue"],
-html[data-framework="react"] [data-fw-block="astro"],
-html[data-framework="react"] [data-fw-block="vue"],
-html[data-framework="vue"] [data-fw-block="astro"],
-html[data-framework="vue"] [data-fw-block="react"] {
+html:not([data-framework="astro"]) [data-fw-block="astro"],
+html:not([data-framework="react"]) [data-fw-block="react"],
+html:not([data-framework="vue"]) [data-fw-block="vue"],
+html:not([data-framework="svelte"]) [data-fw-block="svelte"] {
   display: none;
 }
 
@@ -151,25 +147,29 @@ html[data-framework="vue"] [data-fw-block="react"] {
    Driven by html[data-framework] so all code blocks sync in lockstep. */
 html[data-framework="astro"] .cb-fw-tab[data-fw="astro"],
 html[data-framework="react"] .cb-fw-tab[data-fw="react"],
-html[data-framework="vue"] .cb-fw-tab[data-fw="vue"] {
+html[data-framework="vue"] .cb-fw-tab[data-fw="vue"],
+html[data-framework="svelte"] .cb-fw-tab[data-fw="svelte"] {
   color: oklch(0.09 0 0);
 }
 
 html[data-theme="dark"] .cb-fw-tab[data-fw="astro"],
 html[data-theme="dark"] .cb-fw-tab[data-fw="react"],
-html[data-theme="dark"] .cb-fw-tab[data-fw="vue"] {
+html[data-theme="dark"] .cb-fw-tab[data-fw="vue"],
+html[data-theme="dark"] .cb-fw-tab[data-fw="svelte"] {
   color: var(--page-muted);
 }
 
 html[data-theme="dark"][data-framework="astro"] .cb-fw-tab[data-fw="astro"],
 html[data-theme="dark"][data-framework="react"] .cb-fw-tab[data-fw="react"],
-html[data-theme="dark"][data-framework="vue"] .cb-fw-tab[data-fw="vue"] {
+html[data-theme="dark"][data-framework="vue"] .cb-fw-tab[data-fw="vue"],
+html[data-theme="dark"][data-framework="svelte"] .cb-fw-tab[data-fw="svelte"] {
   color: oklch(0.97 0 0);
 }
 
 html[data-framework="astro"] .cb-fw-tab[data-fw="astro"]::after,
 html[data-framework="react"] .cb-fw-tab[data-fw="react"]::after,
-html[data-framework="vue"] .cb-fw-tab[data-fw="vue"]::after {
+html[data-framework="vue"] .cb-fw-tab[data-fw="vue"]::after,
+html[data-framework="svelte"] .cb-fw-tab[data-fw="svelte"]::after {
   opacity: 1;
 }
 

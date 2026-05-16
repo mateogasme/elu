@@ -1,6 +1,7 @@
 ---
 import { codeToHtml } from 'shiki';
 import { getThemes, type Framework } from '../utils/fw-shiki';
+// Framework type also accepts 'svelte' — fw-shiki returns the same themes for all.
 
 interface Props {
   code: string;

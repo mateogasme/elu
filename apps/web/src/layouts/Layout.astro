@@ -26,7 +26,7 @@ import '@mgasme/elu/styles.css';
         document.documentElement.setAttribute('data-theme', stored === 'dark' ? 'dark' : 'light');
         var fw;
         try { fw = localStorage.getItem('elu-framework'); } catch (_) {}
-        var resolved = (fw === 'react' || fw === 'vue') ? fw : 'astro';
+        var resolved = (fw === 'react' || fw === 'vue' || fw === 'svelte') ? fw : 'astro';
         document.documentElement.setAttribute('data-framework', resolved);
       })();
     </script>

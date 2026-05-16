@@ -18,6 +18,11 @@ const vueSnippets = {
   md: `<Elu.Root>…</Elu.Root>`,
   lg: `<Elu.Root size="lg">…</Elu.Root>`,
 };
+const svelteSnippets = {
+  sm: `<Elu.Root size="sm">…</Elu.Root>`,
+  md: `<Elu.Root>…</Elu.Root>`,
+  lg: `<Elu.Root size="lg">…</Elu.Root>`,
+};
 ---
 
 <section id="sizes">
@@ -67,6 +72,15 @@ const vueSnippets = {
     </div>
     <div data-code-pane data-code-id="lg" data-code-group="size-code" data-framework="vue">
       <FwCode code={vueSnippets.lg} lang="html" fw="vue" />
+    </div>
+    <div data-code-pane data-code-id="sm" data-code-group="size-code" data-framework="svelte">
+      <FwCode code={svelteSnippets.sm} lang="html" fw="svelte" />
+    </div>
+    <div data-code-pane data-code-id="md" data-code-group="size-code" data-framework="svelte" data-active="true">
+      <FwCode code={svelteSnippets.md} lang="html" fw="svelte" />
+    </div>
+    <div data-code-pane data-code-id="lg" data-code-group="size-code" data-framework="svelte">
+      <FwCode code={svelteSnippets.lg} lang="html" fw="svelte" />
     </div>
   </CodeBlock>
 </section>

@@ -6,7 +6,7 @@
     "dev": "npm run dev -w apps/web",
     "build": "npm run build -w apps/web",
     "preview": "npm run preview -w apps/web",
-    "check": "npm run check -w packages/elu-core && npm run check -w packages/elu && npm run check -w packages/elu-react && npm run check -w packages/elu-vue && npm run check -w apps/web"
+    "check": "npm run check -w packages/elu-core && npm run check -w packages/elu && npm run check -w packages/elu-react && npm run check -w packages/elu-vue && npm run check -w packages/elu-svelte && npm run check -w apps/web"
   },
   "devDependencies": {
     "typescript": "^5.9.3"

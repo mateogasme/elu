@@ -51,6 +51,34 @@ const reactCode = `const countries = [
   </Elu.Content>
 </Elu.Root>`;
 
+const svelteCode = `<script lang="ts">
+  import { Elu } from '@mgasme/elu-svelte';
+
+  const countries = [
+    { value: 'ar', label: 'Argentina' },
+    { value: 'br', label: 'Brazil' },
+    { value: 'ca', label: 'Canada' },
+  ];
+</script>
+
+<Elu.Root name="country">
+  <Elu.Trigger>
+    <Elu.Value placeholder="Pick a country" />
+  </Elu.Trigger>
+  <Elu.Content>
+    <Elu.Search placeholder="Search countries…" />
+    <Elu.Viewport>
+      {#each countries as c (c.value)}
+        <Elu.Item value={c.value}>
+          <Elu.ItemText>{c.label}</Elu.ItemText>
+          <Elu.ItemIndicator />
+        </Elu.Item>
+      {/each}
+    </Elu.Viewport>
+    <Elu.Empty>No countries match.</Elu.Empty>
+  </Elu.Content>
+</Elu.Root>`;
+
 const vueCode = `<script setup lang="ts">
 import { Elu } from '@mgasme/elu-vue';
 
@@ -107,5 +135,5 @@ const countries = [
       </Elu.Content>
     </Elu.Root>
   </div>
-  <CodeBlock codes={{ astro: astroCode, react: reactCode, vue: vueCode }} />
+  <CodeBlock codes={{ astro: astroCode, react: reactCode, vue: vueCode, svelte: svelteCode }} />
 </section>

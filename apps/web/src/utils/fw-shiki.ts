@@ -22,7 +22,7 @@
 
 import type { ThemeRegistration } from 'shiki';
 
-export type Framework = 'astro' | 'react' | 'vue';
+export type Framework = 'astro' | 'react' | 'vue' | 'svelte';
 
 const PUNCT_SCOPES = [
   'punctuation',

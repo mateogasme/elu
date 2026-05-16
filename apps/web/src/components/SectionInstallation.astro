@@ -14,5 +14,8 @@ import InlineCode from './InlineCode.astro';
   <p class="text-base leading-[1.55] text-[var(--page-fg)] mb-4" data-fw-block="vue">
     No runtime dependencies. Vue 3.3+ with <InlineCode>&lt;script setup&gt;</InlineCode>. Works with Vite and Nuxt. One style import in your entry.
   </p>
-  <InstallBlock codes={{ astro: 'npm install @mgasme/elu', react: 'npm install @mgasme/elu-react', vue: 'npm install @mgasme/elu-vue' }} />
+  <p class="text-base leading-[1.55] text-[var(--page-fg)] mb-4" data-fw-block="svelte">
+    No runtime dependencies. Svelte 4 and Svelte 5 (runes-free, works in legacy mode). Drop into any SvelteKit or Vite project. One style import in your entry.
+  </p>
+  <InstallBlock codes={{ astro: 'npm install @mgasme/elu', react: 'npm install @mgasme/elu-react', vue: 'npm install @mgasme/elu-vue', svelte: 'npm install @mgasme/elu-svelte' }} />
 </section>

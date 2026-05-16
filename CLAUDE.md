@@ -16,7 +16,7 @@ Run from the repo root (npm workspaces):
 - `npm run dev` — Astro dev server for `apps/web` at `http://localhost:4321`.
 - `npm run build` — production build of `apps/web`.
 - `npm run preview` — preview the production build.
-- `npm run check` — type-checks all five workspaces in order: `elu-core`, `elu`, `elu-react`, `elu-vue`, `apps/web`. Use this as the type/diagnostics gate; there is no separate lint or test script.
+- `npm run check` — type-checks all six workspaces in order: `elu-core`, `elu`, `elu-react`, `elu-vue`, `elu-svelte`, `apps/web`. Use this as the type/diagnostics gate; there is no separate lint or test script.
 
 Workspace-scoped variants:
 
@@ -24,6 +24,7 @@ Workspace-scoped variants:
 - `npm run check -w packages/elu` — type-check Astro package only (astro check).
 - `npm run check -w packages/elu-react` — type-check React package only (tsc).
 - `npm run check -w packages/elu-vue` — type-check Vue package only (vue-tsc).
+- `npm run check -w packages/elu-svelte` — type-check Svelte package only (svelte-check).
 - `npm run dev -w apps/web` — same as `npm run dev`.
 
 No test runner is wired up. No lint script. Verification = `npm run check` + manual UI walkthrough in the dev server.
@@ -36,7 +37,8 @@ Monorepo with five workspaces:
 - `packages/elu` — Astro component library. Zero runtime deps (except `@mgasme/elu-core`). `.astro` templates in `components/` are dumb wrappers. `src/{controller,keyboard,types}.ts` are **one-line shim re-exports** from `@mgasme/elu-core/*` (kept so consumers and `Root.astro`'s `<script>` can `import from '../src/controller'` without knowing the extraction happened). `src/styles.css` is `@import '@mgasme/elu-core/styles.css'`.
 - `packages/elu-react` — React component library. Same compound-component API as `elu`, same CSS, same controller. All React files have `"use client"` at the top for Next.js App Router.
 - `packages/elu-vue` — Vue 3 component library. Same compound-component API, same CSS, same controller. SFCs (`.vue` with `<script setup lang="ts">`); peer dep `vue ^3.3.0`. Lifecycle = `onMounted`/`onUnmounted` (controller mount/destroy). No `class` prop — Vue's automatic class fall-through binds consumer-passed `class` to the SFC's single root. Exports the `Elu` namespace **and** named parts **and** a Vue plugin (`app.use(Elu)` registers all parts as `EluRoot`/`EluTrigger`/... so kebab `<elu-root>` works globally). Type-checked with `vue-tsc --noEmit`.
-- `apps/web` — landing page (Astro) that consumes `@mgasme/elu` via workspace symlinks for live demos. Single route: `apps/web/src/pages/index.astro`. The `@astrojs/react` integration is installed and configured in `astro.config.mjs` (enables `client:*` directives if/when needed) but the live demos all use the Astro package. The hero framework toggle (`id="hero-fw"`) and per-`CodeBlock` framework tabs switch between **Astro / React / Vue** code samples — `SectionFrameworks.astro` lists all three as **Available**, with Svelte still labelled "Soon". Vue code samples use the namespace pattern (`<Elu.Root>` with `import { Elu } from '@mgasme/elu-vue'`) and render via Shiki with `lang="html"` (not `"vue"`) so the HTML grammar tokenises `Elu.Root` as a single tag-name token — see `apps/web/src/components/CodeBlock.astro` (`vueLang` default) and `apps/web/src/utils/fw-shiki.ts`.
+- `packages/elu-svelte` — Svelte component library. Same compound-component API, same CSS, same controller. `.svelte` files with `<script lang="ts">` (Svelte 4 syntax — works in Svelte 5 legacy mode); peer dep `svelte ^4.0.0 || ^5.0.0`. Lifecycle = `onMount`/`onDestroy` (controller mount/destroy). Class fall-through is explicit (`let className = ''; export { className as class };`). `bind:value` works on `Elu.Root` (Svelte two-way binding); one-way mode via `value` + `on:change`. Exports the `Elu` namespace **and** named parts. Type-checked with `svelte-check --tsconfig ./tsconfig.json`.
+- `apps/web` — landing page (Astro) that consumes `@mgasme/elu` via workspace symlinks for live demos. Single route: `apps/web/src/pages/index.astro`. The `@astrojs/react` integration is installed and configured in `astro.config.mjs` (enables `client:*` directives if/when needed) but the live demos all use the Astro package. The hero framework toggle (`id="hero-fw"`) and per-`CodeBlock` framework tabs switch between **Astro / React / Vue / Svelte** code samples — `SectionFrameworks.astro` lists all four as **Available**. Vue code samples use the namespace pattern (`<Elu.Root>` with `import { Elu } from '@mgasme/elu-vue'`) and render via Shiki with `lang="html"` (not `"vue"`) so the HTML grammar tokenises `Elu.Root` as a single tag-name token. Svelte panes render with `lang="svelte"` by default (Shiki's svelte grammar handles dot-notation tag names natively); the `Theme` section forces `lang="html"` for both Vue and Svelte panes since the snippet there is HTML-shaped. See `apps/web/src/components/CodeBlock.astro` (`vueLang` / `svelteLang` defaults) and `apps/web/src/utils/fw-shiki.ts`.
 
 All packages use `"*"` workspace specifiers (npm-workspaces syntax; **not** `workspace:*`).
 
@@ -112,9 +114,9 @@ All visuals controlled by `--elu-*` vars scoped to `[data-elu-root]` (not `:root
 
 ## Project-specific rules
 
-- **All four published packages are source-only, no build step** (`elu-core`, `elu`, `elu-react`, `elu-vue`). Inside this repo the landing consumes `elu` and `elu-react` via `"*"` workspace symlinks, not registry copies.
+- **All five published packages are source-only, no build step** (`elu-core`, `elu`, `elu-react`, `elu-vue`, `elu-svelte`). Inside this repo the landing consumes `elu` via `"*"` workspace symlinks, not registry copies.
 - **Don't add a bundler/build step to any package.** Source ships as-is.
-- **`packages/elu`, `packages/elu-react`, and `packages/elu-vue` must not have runtime dependencies** other than `@mgasme/elu-core`. `elu-core` itself has zero deps.
+- **`packages/elu`, `packages/elu-react`, `packages/elu-vue`, and `packages/elu-svelte` must not have runtime dependencies** other than `@mgasme/elu-core`. `elu-core` itself has zero deps.
 - **`workspace:*` will break npm.** Always use `"*"` in `package.json` dependency entries.
 - **All React files use `"use client"`** at the top. Required for Next.js App Router RSC compatibility — the controller is DOM-only.
 - **Vue parts mount the controller in `onMounted` and destroy in `onUnmounted`.** Only `Root.vue` is non-trivial; the other 12 SFCs are dumb templates with `<slot />`. Don't define a `class` prop on Vue parts — Vue's automatic class fall-through binds consumer-passed `class` to the SFC's single root. `v-model` maps to `modelValue` + `update:modelValue`; controlled-mode reconciliation happens via `watch(() => props.modelValue, ...)` + `ctrl.setValue(next, { silent: true })` (mirrors the React port's controlled-mode pattern).

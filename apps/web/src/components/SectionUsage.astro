@@ -52,6 +52,31 @@ export function FruitSelect() {
   );
 }`;
 
+const svelteCode = `<script lang="ts">
+  import { Elu } from '@mgasme/elu-svelte';
+  import '@mgasme/elu-svelte/styles.css';
+
+  let value = 'orange';
+</script>
+
+<Elu.Root name="fruit" bind:value>
+  <Elu.Trigger>
+    <Elu.Value placeholder="Pick a fruit" />
+  </Elu.Trigger>
+  <Elu.Content>
+    <Elu.Viewport>
+      <Elu.Item value="orange">
+        <Elu.ItemText>Orange</Elu.ItemText>
+        <Elu.ItemIndicator />
+      </Elu.Item>
+      <Elu.Item value="lemon">
+        <Elu.ItemText>Lemon</Elu.ItemText>
+        <Elu.ItemIndicator />
+      </Elu.Item>
+    </Elu.Viewport>
+  </Elu.Content>
+</Elu.Root>`;
+
 const vueCode = `<script setup lang="ts">
 import { Elu } from '@mgasme/elu-vue';
 import '@mgasme/elu-vue/styles.css';
@@ -97,5 +122,5 @@ import '@mgasme/elu-vue/styles.css';
       </Elu.Content>
     </Elu.Root>
   </div>
-  <CodeBlock codes={{ astro: astroCode, react: reactCode, vue: vueCode }} />
+  <CodeBlock codes={{ astro: astroCode, react: reactCode, vue: vueCode, svelte: svelteCode }} />
 </section>

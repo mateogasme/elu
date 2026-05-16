@@ -373,6 +373,145 @@ export function AssigneePicker() {
   );
 }`;
 
+// ── Svelte equivalents ─────────────────────────────────────────────────────────
+const workspaceSvelteCode = `<script lang="ts">
+  import { Elu } from '@mgasme/elu-svelte';
+
+  const accounts = [
+    { value: 'stripe', name: 'Stripe', plan: 'Enterprise', members: 89 },
+    { value: 'vercel', name: 'Vercel', plan: 'Pro',        members: 38 },
+    { value: 'linear', name: 'Linear', plan: 'Pro',        members: 24 },
+  ];
+
+  let value = 'stripe';
+  $: active = accounts.find((a) => a.value === value)!;
+</script>
+
+<Elu.Root class="account-switcher" bind:value>
+  <Elu.Trigger>
+    <span class="logo" data-brand={active.value}><!-- brand SVG --></span>
+    <Elu.Value placeholder="Switch workspace" />
+  </Elu.Trigger>
+  <Elu.Content>
+    <Elu.Viewport>
+      {#each accounts as a (a.value)}
+        <Elu.Item value={a.value} textValue={a.name}>
+          <span class="logo" data-brand={a.value}><!-- brand SVG --></span>
+          <span class="meta">
+            <span class="title">{a.name}</span>
+            <span class="sub">{a.members} members · {a.plan}</span>
+          </span>
+          <Elu.ItemIndicator />
+        </Elu.Item>
+      {/each}
+    </Elu.Viewport>
+  </Elu.Content>
+</Elu.Root>`;
+
+const modelSvelteCode = `<script lang="ts">
+  import { Elu } from '@mgasme/elu-svelte';
+
+  const providers = [
+    {
+      id: 'anthropic',
+      name: 'Anthropic',
+      models: [
+        { value: 'claude-sonnet-4-6', name: 'Claude Sonnet 4.6', desc: 'Best for coding', ctx: '200K', price: '$3.00/M' },
+        { value: 'claude-opus-4-7',   name: 'Claude Opus 4.7',   desc: 'Most capable',    ctx: '200K', price: '$15.0/M' },
+      ],
+    },
+    // …more providers
+  ];
+
+  let value = 'claude-sonnet-4-6';
+  $: provider = providers.find((p) => p.models.some((m) => m.value === value))!;
+</script>
+
+<Elu.Root class="model-picker" bind:value>
+  <Elu.Trigger>
+    <span class="provider-mark" data-provider={provider.id}><!-- mark --></span>
+    <Elu.Value placeholder="Select model" />
+  </Elu.Trigger>
+  <Elu.Content>
+    <Elu.Search placeholder="Search models…" />
+    <Elu.Viewport>
+      {#each providers as p (p.id)}
+        <Elu.Group>
+          <Elu.GroupLabel>
+            <span class="provider-mark" data-provider={p.id}><!-- mark --></span>
+            <span>{p.name}</span>
+          </Elu.GroupLabel>
+          {#each p.models as m (m.value)}
+            <Elu.Item value={m.value} textValue={m.name}>
+              <span class="info">
+                <span class="name">{m.name}</span>
+                <span class="desc">{m.desc}</span>
+              </span>
+              <span class="badges">
+                <span class="badge">{m.ctx}</span>
+                <span class="badge">{m.price}</span>
+              </span>
+              <Elu.ItemIndicator />
+            </Elu.Item>
+          {/each}
+        </Elu.Group>
+      {/each}
+      <Elu.Empty>No models match.</Elu.Empty>
+    </Elu.Viewport>
+  </Elu.Content>
+</Elu.Root>`;
+
+const assigneeSvelteCode = `<script lang="ts">
+  import { Elu } from '@mgasme/elu-svelte';
+
+  const members = [
+    { id: 'mateo', name: 'Mateo Gasme',  email: 'mateo@elu.dev', role: 'Owner',    online: true,  gradient: 0, initials: 'MG' },
+    { id: 'ada',   name: 'Ada Lovelace', email: 'ada@elu.dev',   role: 'Engineer', online: true,  gradient: 1, initials: 'AL' },
+    // …more members
+  ];
+
+  let values: string[] = ['mateo'];
+  $: selected = values.map((v) => members.find((m) => m.id === v)!).filter(Boolean);
+  $: label =
+    values.length === 0 ? 'Assign…'
+    : values.length === 1 ? selected[0].name
+    : \`\${values.length} assignees\`;
+</script>
+
+<Elu.Root class="assignee-picker" multiple bind:value={values}>
+  <Elu.Trigger>
+    <span class="stack" aria-hidden="true">
+      {#each selected.slice(0, 3) as m (m.id)}
+        <span class="avatar" data-gradient={m.gradient}>
+          <span class="initials">{m.initials}</span>
+          {#if m.online}<span class="online-dot" />{/if}
+        </span>
+      {/each}
+    </span>
+    <span class="label" data-empty={values.length === 0}>{label}</span>
+  </Elu.Trigger>
+  <Elu.Content>
+    <Elu.Search placeholder="Search people…" />
+    <Elu.Viewport>
+      {#each members as m (m.id)}
+        <Elu.Item value={m.id} textValue={m.name + ' ' + m.email}>
+          <span class="avatar" data-gradient={m.gradient}>
+            <span class="initials">{m.initials}</span>
+            {#if m.online}<span class="online-dot" />{/if}
+          </span>
+          <span class="info">
+            <span class="name">{m.name}</span>
+            <span class="email">{m.email}</span>
+          </span>
+          <span class="role">{m.role}</span>
+          <Elu.ItemIndicator />
+        </Elu.Item>
+      {/each}
+      <Elu.Empty>No people match.</Elu.Empty>
+    </Elu.Viewport>
+  </Elu.Content>
+</Elu.Root>`;
+
 // ── Vue equivalents ────────────────────────────────────────────────────────────
 const workspaceVueCode = `<script setup lang="ts">
 import { ref, computed } from 'vue';
@@ -549,7 +688,7 @@ const label = computed(() =>
           </Elu.Content>
         </Elu.Root>
       </div>
-      <CodeBlock codes={{ astro: workspaceAstroCode, react: workspaceReactCode, vue: workspaceVueCode }} />
+      <CodeBlock codes={{ astro: workspaceAstroCode, react: workspaceReactCode, vue: workspaceVueCode, svelte: workspaceSvelteCode }} />
     </div>
 
     <div>
@@ -589,7 +728,7 @@ const label = computed(() =>
           </Elu.Content>
         </Elu.Root>
       </div>
-      <CodeBlock codes={{ astro: modelAstroCode, react: modelReactCode, vue: modelVueCode }} />
+      <CodeBlock codes={{ astro: modelAstroCode, react: modelReactCode, vue: modelVueCode, svelte: modelSvelteCode }} />
     </div>
 
     <div>
@@ -622,7 +761,7 @@ const label = computed(() =>
           </Elu.Content>
         </Elu.Root>
       </div>
-      <CodeBlock codes={{ astro: assigneeAstroCode, react: assigneeReactCode, vue: assigneeVueCode }} />
+      <CodeBlock codes={{ astro: assigneeAstroCode, react: assigneeReactCode, vue: assigneeVueCode, svelte: assigneeSvelteCode }} />
     </div>
 
   </div>

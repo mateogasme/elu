@@ -1,0 +1,65 @@
+{
+  "name": "@mgasme/elu-svelte",
+  "version": "0.4.0",
+  "description": "Composable Svelte select component. Single, multi, searchable, grouped. Zero runtime dependencies.",
+  "keywords": [
+    "svelte",
+    "svelte5",
+    "sveltekit",
+    "select",
+    "combobox",
+    "listbox",
+    "dropdown",
+    "multi-select",
+    "searchable",
+    "popover",
+    "anchor-positioning",
+    "accessibility",
+    "a11y"
+  ],
+  "homepage": "https://github.com/mateogasme/elu#readme",
+  "bugs": {
+    "url": "https://github.com/mateogasme/elu/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mateogasme/elu.git"
+  },
+  "author": "mateogasme",
+  "type": "module",
+  "license": "MIT",
+  "svelte": "./src/index.ts",
+  "exports": {
+    ".": {
+      "svelte": "./src/index.ts",
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./styles.css": "./src/styles.css"
+  },
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": [
+    "./src/styles.css"
+  ],
+  "peerDependencies": {
+    "svelte": "^4.0.0 || ^5.0.0"
+  },
+  "dependencies": {
+    "@mgasme/elu-core": "*"
+  },
+  "scripts": {
+    "check": "svelte-check --tsconfig ./tsconfig.json"
+  },
+  "devDependencies": {
+    "svelte": "^5.0.0",
+    "svelte-check": "^4.0.0",
+    "typescript": "^5.9.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

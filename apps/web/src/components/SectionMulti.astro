@@ -55,6 +55,37 @@ const reactCode = `<Elu.Root name="tags" multiple>
   </Elu.Content>
 </Elu.Root>`;
 
+const svelteCode = `<script lang="ts">
+  import { Elu } from '@mgasme/elu-svelte';
+  let tags: string[] = [];
+</script>
+
+<Elu.Root name="tags" multiple bind:value={tags}>
+  <Elu.Trigger>
+    <Elu.Value placeholder="Pick tags" />
+  </Elu.Trigger>
+  <Elu.Content>
+    <Elu.Viewport>
+      <Elu.Item value="design">
+        <Elu.ItemText>Design</Elu.ItemText>
+        <Elu.ItemIndicator />
+      </Elu.Item>
+      <Elu.Item value="eng">
+        <Elu.ItemText>Engineering</Elu.ItemText>
+        <Elu.ItemIndicator />
+      </Elu.Item>
+      <Elu.Item value="ops">
+        <Elu.ItemText>Operations</Elu.ItemText>
+        <Elu.ItemIndicator />
+      </Elu.Item>
+      <Elu.Item value="sales">
+        <Elu.ItemText>Sales</Elu.ItemText>
+        <Elu.ItemIndicator />
+      </Elu.Item>
+    </Elu.Viewport>
+  </Elu.Content>
+</Elu.Root>`;
+
 const vueCode = `<Elu.Root name="tags" multiple>
   <Elu.Trigger>
     <Elu.Value placeholder="Pick tags" />
@@ -98,5 +129,5 @@ const vueCode = `<Elu.Root name="tags" multiple>
       </Elu.Content>
     </Elu.Root>
   </div>
-  <CodeBlock codes={{ astro: astroCode, react: reactCode, vue: vueCode }} />
+  <CodeBlock codes={{ astro: astroCode, react: reactCode, vue: vueCode, svelte: svelteCode }} />
 </section>
