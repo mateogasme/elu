@@ -46,7 +46,7 @@ export const eluLight: ThemeRegistration = {
     {
       name: 'Comment',
       scope: ['comment', 'punctuation.definition.comment'],
-      settings: { foreground: '#B1B1B1', fontStyle: 'italic' },
+      settings: { foreground: '#B1B1B1' },
     },
   ],
 };
@@ -67,7 +67,7 @@ export const eluDark: ThemeRegistration = {
     {
       name: 'Comment',
       scope: ['comment', 'punctuation.definition.comment'],
-      settings: { foreground: '#636363', fontStyle: 'italic' },
+      settings: { foreground: '#636363' },
     },
   ],
 };
